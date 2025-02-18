@@ -29,7 +29,9 @@ export default function TabForm({ tab, updateTabData, position }) {
   }
 
   function saveFormData(Event) {
+    // prevent page reload from pressing save
     Event.preventDefault();
+    // updates tab with formData
     updateTabData(position, formData);
   }
 
