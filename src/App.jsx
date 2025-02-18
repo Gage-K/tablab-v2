@@ -3,6 +3,8 @@ import { nanoid } from "nanoid";
 
 import "./App.css";
 
+import TabDetails from "./components/TabDetails";
+
 function App() {
   const tabDetails = {
     song: "Leave Them All Behind",
@@ -15,18 +17,18 @@ function App() {
 
   const tab = [];
 
-  const renderDetails = (
-    <section>
-      <h1>Song: {tabDetails.song}</h1>
-      <p>Artist: {tabDetails.artist}</p>
-      <p>Creator: {tabDetails.creator}</p>
-      <p>Date created: {tabDetails.dateCreated}</p>
-      <p>Date modified: {tabDetails.dateModified}</p>
-      <p>Tuning: {tabDetails.tuning}</p>
-    </section>
+  return (
+    <>
+      <TabDetails
+        song={tabDetails.song}
+        artist={tabDetails.artist}
+        creator={tabDetails.creator}
+        dateCreated={tabDetails.dateCreated}
+        dateModified={tabDetails.dateModified}
+        tuning={tabDetails.tuning}
+      />
+    </>
   );
-
-  return <>{renderDetails}</>;
 }
 
 export default App;
