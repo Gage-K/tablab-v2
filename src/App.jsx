@@ -1,9 +1,15 @@
+// REACT IMPORTS
 import { useState } from "react";
 import { nanoid } from "nanoid";
 
+// STYLE IMPORTS
 import "./App.css";
 
+// COMPONENTS IMPORTS
 import TabDetails from "./components/TabDetails";
+
+// DATA IMPORTS
+import { tab } from "./data/defaultTab.json";
 
 function App() {
   const tabDetails = {
@@ -14,6 +20,8 @@ function App() {
     dateModified: 20250215,
     tuning: "EADGBE",
   };
+
+  console.log(tab);
 
   const tab = [];
 

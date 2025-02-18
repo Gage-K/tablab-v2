@@ -1,0 +1,99 @@
+{
+  "tabDetails": {
+    "song": "Leave Them All Behind",
+    "artist": "Ride",
+    "creator": "Gage",
+    "dateCreated": 20250214,
+    "dateModified": 20250215,
+    "tuning": "EADGBE"
+  },
+  "tab": [
+    {
+      "id": 1,
+      "notes": [
+        {
+          "fret": null,
+          "style": null
+        },
+        {
+          "fret": -1,
+          "style": "slide"
+        },
+        {
+          "fret": 1,
+          "style": "hammerOn"
+        },
+        {
+          "fret": 2,
+          "style": "hammerOff"
+        },
+        {
+          "fret": 3,
+          "style": "harmonic"
+        },
+        {
+          "fret": 4,
+          "style": "bend"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "notes": [
+        {
+          "fret": null,
+          "style": null
+        },
+        {
+          "fret": 10,
+          "style": "slide"
+        },
+        {
+          "fret": 0,
+          "style": "hammerOn"
+        },
+        {
+          "fret": 5,
+          "style": "hammerOff"
+        },
+        {
+          "fret": 3,
+          "style": "harmonic"
+        },
+        {
+          "fret": 8,
+          "style": "bend"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "notes": [
+        {
+          "fret": null,
+          "style": null
+        },
+        {
+          "fret": 5,
+          "style": "slide"
+        },
+        {
+          "fret": 4,
+          "style": "hammerOn"
+        },
+        {
+          "fret": 6,
+          "style": "hammerOff"
+        },
+        {
+          "fret": 3,
+          "style": "harmonic"
+        },
+        {
+          "fret": 7,
+          "style": "bend"
+        }
+      ]
+    }
+  ]
+}
