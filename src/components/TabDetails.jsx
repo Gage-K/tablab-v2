@@ -1,3 +1,6 @@
+import React from "react";
+import { useState } from "react";
+
 import PropTypes from "prop-types";
 
 export default function TabDetails({
@@ -8,14 +11,23 @@ export default function TabDetails({
   dateModified,
   tuning,
 }) {
+  const [isShown, setIsShown] = useState(false);
+
   return (
     <section>
       <h1>Song: {song}</h1>
-      <p>Artist: {artist}</p>
-      <p>Creator: {creator}</p>
-      <p>Date created: {dateCreated}</p>
-      <p>Date modified: {dateModified}</p>
-      <p>Tuning: {tuning}</p>
+      <button onClick={() => setIsShown((prev) => !prev)}>
+        {isShown ? "Hide" : "Show"} details
+      </button>
+      {isShown ? (
+        <>
+          <p>Artist: {artist}</p>
+          <p>Creator: {creator}</p>
+          <p>Date created: {dateCreated}</p>
+          <p>Date modified: {dateModified}</p>
+          <p>Tuning: {tuning}</p>
+        </>
+      ) : null}
     </section>
   );
 }
