@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import PropTypes from "prop-types";
 
 export default function TabForm({ tab, updateTabData, position }) {
@@ -12,11 +12,13 @@ export default function TabForm({ tab, updateTabData, position }) {
   // STATES
   const [formData, setFormData] = useState(tab[position].notes);
 
-  // USE EFFECTS
+  // HOOKS
+  const currentNotes = useMemo(() => tab[position]?.notes, [tab, position]);
+
   useEffect(() => {
     // Whenever user's current position changes, update formData to current position
-    setFormData(tab[position].notes);
-  }, [position]);
+    setFormData(currentNotes);
+  }, [currentNotes]);
 
   // FUNCTIONS
   function updateFret(Event, string) {
