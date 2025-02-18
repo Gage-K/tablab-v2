@@ -86,3 +86,28 @@ button:focus-visible {
 .tab-current-pos {
   background-color: rgba(58, 58, 58, 100%);
 }
+
+.tab-form-section {
+  margin: auto;
+  width: auto;
+}
+
+fieldset {
+  display: flex;
+  align-items: flex-end;
+}
+
+legend {
+  white-space: nowrap;
+}
+
+.form-string-fret {
+  display: flex;
+  gap: 1rem;
+}
+
+.form-fret {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

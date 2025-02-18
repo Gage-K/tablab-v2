@@ -35,26 +35,28 @@ function App() {
 
   return (
     <>
-      <TabDetails
-        song={tabDetails.song}
-        artist={tabDetails.artist}
-        creator={tabDetails.creator}
-        dateCreated={tabDetails.dateCreated}
-        dateModified={tabDetails.dateModified}
-        tuning={tabDetails.tuning}
-      />
-      <TabForm />
-      <button onClick={() => updatePosition(position - 1)}>
-        Previous position
-      </button>
-      <button onClick={() => updatePosition(position + 1)}>
-        Next position
-      </button>
-      <TabDisplay
-        tab={tab}
-        position={position}
-        updatePosition={updatePosition}
-      />
+      <main>
+        <TabDetails
+          song={tabDetails.song}
+          artist={tabDetails.artist}
+          creator={tabDetails.creator}
+          dateCreated={tabDetails.dateCreated}
+          dateModified={tabDetails.dateModified}
+          tuning={tabDetails.tuning}
+        />
+        <TabForm />
+        <button onClick={() => updatePosition(position - 1)}>
+          Previous position
+        </button>
+        <button onClick={() => updatePosition(position + 1)}>
+          Next position
+        </button>
+        <TabDisplay
+          tab={tab}
+          position={position}
+          updatePosition={updatePosition}
+        />
+      </main>
     </>
   );
 }
