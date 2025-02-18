@@ -32,8 +32,6 @@ function App() {
     }
   }
 
-  console.log(position);
-
   return (
     <>
       <TabDetails
