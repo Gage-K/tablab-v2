@@ -14,14 +14,15 @@ import TabForm from "./components/TabForm";
 import defaultTab from "./data/defaultTab.json";
 
 function App() {
-  // constants for testing
+  // CONSTANTS (FOR TESTING)
   const tabDetails = defaultTab.tabDetails; // general details about tab
   const initTab = defaultTab.tab; // init testing notes for tab --> change later to empty init
 
-  // states
+  // STATES
   const [tab, setTab] = useState(initTab);
   const [position, setPosition] = useState(0); // position indicates place in array of tab, like a timestamp
 
+  // FUNCTIONS
   function tabPositionExists(pos) {
     // checks if requested position in tab exists
     return pos < tab.length && pos >= 0;
