@@ -8,6 +8,7 @@ import "./App.css";
 // COMPONENTS IMPORTS
 import TabDetails from "./components/TabDetails";
 import TabDisplay from "./components/TabDisplay";
+import TabForm from "./components/TabForm";
 
 // DATA IMPORTS
 import defaultTab from "./data/defaultTab.json";
@@ -28,7 +29,7 @@ function App() {
 
   function updatePosition(pos) {
     if (tabPositionExists(pos)) {
-      setPosition((prevPos) => pos);
+      setPosition(pos);
     }
   }
 
@@ -42,6 +43,7 @@ function App() {
         dateModified={tabDetails.dateModified}
         tuning={tabDetails.tuning}
       />
+      <TabForm />
       <button onClick={() => updatePosition(position - 1)}>
         Previous position
       </button>
