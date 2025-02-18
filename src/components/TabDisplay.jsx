@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 
 export default function TabDisplay({ tab, position, updatePosition }) {
-  console.log(position);
   return (
     // maps over all of the tab and for each moment of tab:
     //      add an onClick that updates position
