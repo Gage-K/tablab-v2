@@ -20,17 +20,36 @@ function App() {
 
   // STATES
   const [tab, setTab] = useState(initTab);
-  const [position, setPosition] = useState(0); // position indicates place in array of tab, like a timestamp
+  const [position, setPosition] = useState({ measure: 0, index: 0 });
 
   // FUNCTIONS
-  function tabPositionExists(pos) {
-    // checks if requested position in tab exists
-    return pos < tab.length && pos >= 0;
+  function checkIfPositionExists(measure, index) {
+    return tab[measure][index] != undefined;
   }
 
-  function updatePosition(pos) {
-    if (tabPositionExists(pos)) {
-      setPosition(pos);
+  function updatePosition(measure, index) {
+    const nextMeasure = measure + 1;
+    const prevMeasure = measure - 1;
+    const firstIndex = 0;
+    const prevLastIndex = tab[prevMeasure]?.length - 1;
+
+    if (checkIfPositionExists(measure, index)) {
+      setPosition({ measure, index });
+      return;
+    }
+
+    if (index >= tab[measure]?.length && nextMeasure < tab.length) {
+      if (checkIfPositionExists(nextMeasure, firstIndex)) {
+        setPosition({ measure: nextMeasure, index: firstIndex });
+      }
+      return;
+    }
+
+    if (index < 0 && prevMeasure >= 0) {
+      if (checkIfPositionExists(prevMeasure, prevLastIndex)) {
+        setPosition({ measure: prevMeasure, index: prevLastIndex });
+      }
+      return;
     }
   }
 
@@ -100,7 +119,7 @@ function App() {
     console.log("delete ran");
     tab.length === 1
       ? null
-      : setTab((prev) => prev.filter((moment) => moment.id != id));
+      : setTab((prev) => prev.filter((frame) => frame.id != id));
 
     position === 0
       ? setPosition(position)
@@ -110,7 +129,6 @@ function App() {
   }
 
   //addNewTab(1, true);
-  console.log(tab);
 
   return (
     <>
@@ -123,20 +141,16 @@ function App() {
           dateModified={tabDetails.dateModified}
           tuning={tabDetails.tuning}
         />
-        <TabForm
-          tab={tab}
-          updateTabData={updateTabData}
-          position={position}
-          getEmptyTab={getEmptyTab}
-          addNewTab={addNewTab}
-          deleteTab={deleteTab}
-        />
-        <button onClick={() => updatePosition(position - 1)}>
+
+        <button
+          onClick={() => updatePosition(position.measure, position.index - 1)}>
           Previous position
         </button>
-        <button onClick={() => updatePosition(position + 1)}>
+        <button
+          onClick={() => updatePosition(position.measure, position.index + 1)}>
           Next position
         </button>
+
         <TabDisplay
           tab={tab}
           position={position}
@@ -147,5 +161,16 @@ function App() {
     </>
   );
 }
+
+/*
+<TabForm
+          tab={tab}
+          updateTabData={updateTabData}
+          position={position}
+          getEmptyTab={getEmptyTab}
+          addNewTab={addNewTab}
+          deleteTab={deleteTab}
+        />
+*/
 
 export default App;
