@@ -42,6 +42,76 @@ function App() {
     );
   }
 
+  function getEmptyTab() {
+    return {
+      id: nanoid(),
+      notes: [
+        {
+          fret: -2,
+          style: "none",
+        },
+        {
+          fret: -2,
+          style: "none",
+        },
+        {
+          fret: -2,
+          style: "none",
+        },
+        {
+          fret: -2,
+          style: "none",
+        },
+        {
+          fret: -2,
+          style: "none",
+        },
+        {
+          fret: -2,
+          style: "none",
+        },
+      ],
+    };
+  }
+
+  function getTabByLocation(pos) {
+    return tab[pos];
+  }
+
+  function addNewTab(pos, isEmptyTab) {
+    // accepts a position and whether the tab to be added should be empty
+    // position where new tab is added is always tab[pos + 1]
+    // if tab should be empty, call getEmptyTab()
+    // if tab should not be empty, call getExistingTab(pos) and update its id
+    // add new tab to tab
+    const newTab = isEmptyTab
+      ? getEmptyTab()
+      : { ...getTabByLocation(pos), id: nanoid() };
+
+    setTab((prev) => prev.toSpliced(pos + 1, 0, newTab));
+    setPosition(pos + 1);
+    console.log(newTab);
+    console.log("new tab ran");
+    console.log(pos);
+    console.log(isEmptyTab);
+  }
+
+  function deleteTab(id) {
+    console.log("delete ran");
+    tab.length === 1
+      ? null
+      : setTab((prev) => prev.filter((moment) => moment.id != id));
+
+    position === 0
+      ? setPosition(position)
+      : position === tab.length - 1
+      ? setPosition((prev) => prev - 1)
+      : setPosition(position);
+  }
+
+  //addNewTab(1, true);
+  console.log(tab);
+
   return (
     <>
       <main>
@@ -53,7 +123,14 @@ function App() {
           dateModified={tabDetails.dateModified}
           tuning={tabDetails.tuning}
         />
-        <TabForm tab={tab} updateTabData={updateTabData} position={position} />
+        <TabForm
+          tab={tab}
+          updateTabData={updateTabData}
+          position={position}
+          getEmptyTab={getEmptyTab}
+          addNewTab={addNewTab}
+          deleteTab={deleteTab}
+        />
         <button onClick={() => updatePosition(position - 1)}>
           Previous position
         </button>
@@ -64,6 +141,7 @@ function App() {
           tab={tab}
           position={position}
           updatePosition={updatePosition}
+          addNewTab={addNewTab}
         />
       </main>
     </>
