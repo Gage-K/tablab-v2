@@ -98,7 +98,7 @@ function App() {
     return tab[measure][index];
   }
 
-  function addNewTab(measure, index, isEmptyTab) {
+  function addNewFrame(measure, index, isEmptyTab) {
     // accepts a position and whether the tab to be added should be empty
     // position where new tab is added is always tab[pos + 1]
     // if tab should be empty, call getEmptyTab()
@@ -172,7 +172,7 @@ function App() {
           tab={tab}
           position={position}
           updatePosition={updatePosition}
-          addNewTab={addNewTab}
+          addNewFrame={addNewFrame}
           addNewMeasure={addNewMeasure}
           tuning={tabDetails.tuning}
         />
