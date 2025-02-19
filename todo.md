@@ -6,7 +6,6 @@
 
 ## Tab Display
 
-- [ ] Implement a11y labels
 - [ ] Implement note & chord finder
 
 - [x] Finish tab display for all tab
@@ -35,3 +34,9 @@
   - [x] onChange event for formData
 - [x] Impelemnt `save`
   - [x] set tabData of spec id to formData
+
+## Mobile
+
+## a11y
+
+- [ ] Implement a11y to display
