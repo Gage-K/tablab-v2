@@ -71,7 +71,7 @@ button:focus-visible {
   margin: 2rem 0rem;
 }
 
-.tab-moment {
+.tab-frame {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -82,11 +82,15 @@ button:focus-visible {
   border: 1px solid rgba(192, 192, 192, 0%);
 }
 
-.tab-moment:hover {
+.tab-frame:hover {
   border: 1px solid rgba(192, 192, 192, 100%);
 }
 
-.tab-moment-container {
+.tab-frame-container {
+  display: flex;
+}
+
+.tab-measure-container {
   display: flex;
 }
 
