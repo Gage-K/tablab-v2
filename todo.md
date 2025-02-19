@@ -8,9 +8,9 @@
 
 - [ ] Refactor to allow for measure grouping
   - [x] Update default data to reflect this
-  - [ ] Display measure start and end
+  - [x] Display measure start and end
   - [ ] Update buttons in TabDisplay
-  - [ ] Update position (maybe as measure and then frame)
+  - [x] Update position (maybe as measure and then frame)
   - [ ] Update functions in TabForm
   - [ ] Update user controls in App
 
