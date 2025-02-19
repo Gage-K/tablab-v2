@@ -4,9 +4,18 @@ import { nanoid } from "nanoid";
 export default function TabDisplay({
   tab,
   position,
+  tuning,
   updatePosition,
   addNewTab,
+  addNewMeasure,
 }) {
+  const renderTuning = (
+    <div className="tab-frame">
+      {tuning.toReversed().map((note) => (
+        <p key={nanoid()}>{note}</p>
+      ))}
+    </div>
+  );
   return (
     // maps over all of the tab and for each frane of tab:
     //      add an onClick that updates position
@@ -15,12 +24,17 @@ export default function TabDisplay({
     //          display the fretted positions in notes array
 
     <section className="tab-display">
-      <button className="button-plus" onClick={() => addNewTab(-1, true)}>
-        +
-      </button>
+      <span>||</span>
+      {renderTuning}
       <span>|</span>
+
       {tab.map((measure, measureIndex) => (
         <div key={measureIndex} className="tab-measure-container">
+          <button
+            className="button-plus"
+            onClick={() => addNewTab(measureIndex, -1, true)}>
+            +
+          </button>
           {measure.map((frame, frameIndex) => (
             <div key={frameIndex} className="tab-frame-container">
               <div
@@ -36,11 +50,21 @@ export default function TabDisplay({
                   <p key={frame.notes.indexOf(note)}>{note.fret}</p>
                 ))}
               </div>
+              <button
+                className="button-plus"
+                onClick={() => addNewTab(measureIndex, frameIndex, true)}>
+                +
+              </button>
             </div>
           ))}
           <span>|</span>
         </div>
       ))}
+      <button
+        className="button-plus last"
+        onClick={() => addNewMeasure(tab.length)}>
+        +
+      </button>
     </section>
   );
 }
@@ -48,8 +72,10 @@ export default function TabDisplay({
 TabDisplay.propTypes = {
   tab: PropTypes.array.isRequired,
   position: PropTypes.number.isRequired,
+  tuning: PropTypes.array.isRequired,
   updatePosition: PropTypes.func.isRequired,
   addNewTab: PropTypes.func.isRequired,
+  addNewMeasure: PropTypes.func.isRequired,
 };
 
 /*

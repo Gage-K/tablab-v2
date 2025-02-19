@@ -1,5 +1,5 @@
 // REACT IMPORTS
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { nanoid } from "nanoid";
 
 // STYLE IMPORTS
@@ -24,7 +24,8 @@ function App() {
 
   // FUNCTIONS
   function checkIfPositionExists(measure, index) {
-    return tab[measure][index] != undefined;
+    const requestedTab = tab[measure];
+    return requestedTab != undefined ? requestedTab[index] != undefined : false;
   }
 
   function updatePosition(measure, index) {
@@ -93,11 +94,11 @@ function App() {
     };
   }
 
-  function getTabByLocation(pos) {
-    return tab[pos];
+  function getTabByLocation(measure, index) {
+    return tab[measure][index];
   }
 
-  function addNewTab(pos, isEmptyTab) {
+  function addNewTab(measure, index, isEmptyTab) {
     // accepts a position and whether the tab to be added should be empty
     // position where new tab is added is always tab[pos + 1]
     // if tab should be empty, call getEmptyTab()
@@ -105,18 +106,36 @@ function App() {
     // add new tab to tab
     const newTab = isEmptyTab
       ? getEmptyTab()
-      : { ...getTabByLocation(pos), id: nanoid() };
+      : { ...getTabByLocation(measure, index), id: nanoid() };
 
-    setTab((prev) => prev.toSpliced(pos + 1, 0, newTab));
-    setPosition(pos + 1);
-    console.log(newTab);
-    console.log("new tab ran");
-    console.log(pos);
-    console.log(isEmptyTab);
+    const updatedTab = tab.map((prevMeasure, i) =>
+      i === measure
+        ? [
+            ...prevMeasure.slice(0, index + 1),
+            newTab,
+            ...prevMeasure.slice(index + 1),
+          ]
+        : prevMeasure
+    );
+
+    setTab(updatedTab);
+
+    updatePosition(measure, index + 1);
+  }
+
+  function addNewMeasure(measure) {
+    const newMeasure = [getEmptyTab()];
+    const updatedTab = [
+      ...tab.slice(0, measure),
+      newMeasure,
+      ...tab.slice(measure + 1),
+    ];
+
+    setTab(updatedTab);
+    updatePosition(measure, 0);
   }
 
   function deleteTab(id) {
-    console.log("delete ran");
     tab.length === 1
       ? null
       : setTab((prev) => prev.filter((frame) => frame.id != id));
@@ -127,8 +146,6 @@ function App() {
       ? setPosition((prev) => prev - 1)
       : setPosition(position);
   }
-
-  //addNewTab(1, true);
 
   return (
     <>
@@ -156,6 +173,8 @@ function App() {
           position={position}
           updatePosition={updatePosition}
           addNewTab={addNewTab}
+          addNewMeasure={addNewMeasure}
+          tuning={tabDetails.tuning}
         />
       </main>
     </>
