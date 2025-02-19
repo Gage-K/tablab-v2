@@ -15,14 +15,14 @@
 
 ## Tab Form
 
-- [ ] Implement `clear`
-  - [ ] set formData frets & style to `null`
-  - [ ] update formData
-- [ ] Implement `delete`
-  - [ ] remove tabData of spec id
 - [ ] Allow for different number of strings to be selected
 - [ ] Automatically render fieldsets based on number of strings
 
+- [x] Implement `clear`
+  - [x] set formData frets & style to `null`
+  - [x] update formData
+- [x] Implement `delete`
+  - [x] remove tabData of spec id
 - [x] Init Form
 - [x] Create formData state
 - [x] Load tab data into form from current pos
