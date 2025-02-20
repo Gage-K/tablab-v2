@@ -1,5 +1,5 @@
 // REACT IMPORTS
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { nanoid } from "nanoid";
 
 // STYLE IMPORTS
@@ -20,49 +20,51 @@ function App() {
 
   // STATES
   const [tab, setTab] = useState(initTab);
-  const [position, setPosition] = useState({ measure: 0, index: 0 });
+  const [position, setPosition] = useState({ measure: 0, frame: 0 });
 
   // FUNCTIONS
-  function checkIfPositionExists(measure, index) {
-    const requestedTab = tab[measure];
-    return requestedTab != undefined ? requestedTab[index] != undefined : false;
+  function isExistingPosition(measure, frame) {
+    return tab[measure] != undefined ? tab[measure][frame] != undefined : false;
   }
 
-  function updatePosition(measure, index) {
-    const nextMeasure = measure + 1;
-    const prevMeasure = measure - 1;
-    const firstIndex = 0;
-    const prevLastIndex = tab[prevMeasure]?.length - 1;
+  function isOnlyFrame(measure) {
+    return tab[measure].length === 1;
+  }
 
-    if (checkIfPositionExists(measure, index)) {
-      setPosition({ measure, index });
+  function isOnlyMeasure() {
+    return tab.length === 1;
+  }
+
+  function updatePosition(measure, frame) {
+    // If position exists, update it
+    if (isExistingPosition(measure, frame)) {
+      setPosition({ measure, frame });
       return;
     }
 
-    if (index >= tab[measure]?.length && nextMeasure < tab.length) {
-      if (checkIfPositionExists(nextMeasure, firstIndex)) {
-        setPosition({ measure: nextMeasure, index: firstIndex });
+    // Handle moving forward past the last frame in a measure
+    if (frame >= tab[measure]?.length) {
+      const nextMeasure = measure + 1;
+      if (nextMeasure < tab.length) {
+        setPosition({ measure: nextMeasure, frame: 0 });
       }
       return;
     }
 
-    if (index < 0 && prevMeasure >= 0) {
-      if (checkIfPositionExists(prevMeasure, prevLastIndex)) {
-        setPosition({ measure: prevMeasure, index: prevLastIndex });
+    // Handle moving backward before the first frame in a measure
+    if (frame < 0) {
+      const prevMeasure = measure - 1;
+      if (prevMeasure >= 0) {
+        setPosition({
+          measure: prevMeasure,
+          frame: tab[prevMeasure]?.length - 1 || 0, // Move to the last frame of the previous measure
+        });
       }
       return;
     }
   }
 
-  function updateTabData(pos, formData) {
-    setTab((prev) =>
-      prev.map((tabItem, index) =>
-        index === pos ? { id: nanoid(), notes: formData } : tabItem
-      )
-    );
-  }
-
-  function getEmptyTab() {
+  function getEmptyFrame() {
     return {
       id: nanoid(),
       notes: [
@@ -94,37 +96,12 @@ function App() {
     };
   }
 
-  function getTabByLocation(measure, index) {
-    return tab[measure][index];
-  }
-
-  function addNewFrame(measure, index, isEmptyTab) {
-    // accepts a position and whether the tab to be added should be empty
-    // position where new tab is added is always tab[pos + 1]
-    // if tab should be empty, call getEmptyTab()
-    // if tab should not be empty, call getExistingTab(pos) and update its id
-    // add new tab to tab
-    const newTab = isEmptyTab
-      ? getEmptyTab()
-      : { ...getTabByLocation(measure, index), id: nanoid() };
-
-    const updatedTab = tab.map((prevMeasure, i) =>
-      i === measure
-        ? [
-            ...prevMeasure.slice(0, index + 1),
-            newTab,
-            ...prevMeasure.slice(index + 1),
-          ]
-        : prevMeasure
-    );
-
-    setTab(updatedTab);
-
-    updatePosition(measure, index + 1);
+  function getTabByLocation(measure, frame) {
+    return tab[measure][frame];
   }
 
   function addNewMeasure(measure) {
-    const newMeasure = [getEmptyTab()];
+    const newMeasure = [getEmptyFrame()];
     const updatedTab = [
       ...tab.slice(0, measure),
       newMeasure,
@@ -135,16 +112,75 @@ function App() {
     updatePosition(measure, 0);
   }
 
-  function deleteTab(id) {
-    tab.length === 1
-      ? null
-      : setTab((prev) => prev.filter((frame) => frame.id != id));
+  function addNewFrame(measure, frame, isEmptyTab) {
+    // accepts a position and whether the tab to be added should be empty
+    // position where new tab is added is always tab[pos + 1]
+    // if tab should be empty, call getEmptyFrame()
+    // if tab should not be empty, call getExistingTab(pos) and update its id
+    // add new tab to tab
+    const newTab = isEmptyTab
+      ? getEmptyFrame()
+      : { ...getTabByLocation(measure, frame), id: nanoid() };
 
-    position === 0
-      ? setPosition(position)
-      : position === tab.length - 1
-      ? setPosition((prev) => prev - 1)
-      : setPosition(position);
+    const updatedTab = tab.map((prevMeasure, i) =>
+      i === measure
+        ? [
+            ...prevMeasure.slice(0, frame + 1),
+            newTab,
+            ...prevMeasure.slice(frame + 1),
+          ]
+        : prevMeasure
+    );
+
+    setTab(updatedTab);
+
+    updatePosition(measure, frame + 1);
+  }
+
+  function deleteMeasure(measure) {
+    // prevents deletion when it is the only measure
+    if (isOnlyMeasure()) {
+      return;
+    }
+    setTab((prev) => prev.filter((prevMeasure, index) => index != measure));
+    updatePosition(measure - 1, tab[measure - 1]?.length - 1);
+  }
+
+  function deleteFrame(frame, measure) {
+    if (isOnlyFrame(measure)) {
+      if (isOnlyMeasure()) {
+        // prevents deletion when it is the only frame of the only measure
+        return;
+      } else {
+        // else if it is the only frame in the measure, delete the whole measure
+        deleteMeasure(measure);
+        return;
+      }
+    }
+
+    // otherwise, only delete the frame at the requested position
+    setTab((prev) =>
+      prev.map((prevMeasure, i) =>
+        i === measure
+          ? prevMeasure.filter((prevFrame, j) => j != frame)
+          : prevMeasure
+      )
+    );
+    // move backwards in position
+    updatePosition(measure, frame - 1);
+  }
+
+  function updateTabData(measure, index, formData) {
+    // make changes to tab based on formdata
+    setTab(
+      tab.map((prevMeasure, measureIndex) =>
+        prevMeasure.map((frame, frameIndex) =>
+          frameIndex === index && measureIndex === measure
+            ? { id: nanoid(), notes: formData }
+            : frame
+        )
+      )
+    );
   }
 
   return (
@@ -158,13 +194,22 @@ function App() {
           dateModified={tabDetails.dateModified}
           tuning={tabDetails.tuning}
         />
+        <TabForm
+          tab={tab}
+          updateTabData={updateTabData}
+          measure={position.measure}
+          frame={position.frame}
+          getEmptyFrame={getEmptyFrame}
+          addNewFrame={addNewFrame}
+          deleteTab={deleteFrame}
+        />
 
         <button
-          onClick={() => updatePosition(position.measure, position.index - 1)}>
+          onClick={() => updatePosition(position.measure, position.frame - 1)}>
           Previous position
         </button>
         <button
-          onClick={() => updatePosition(position.measure, position.index + 1)}>
+          onClick={() => updatePosition(position.measure, position.frame + 1)}>
           Next position
         </button>
 
@@ -181,15 +226,8 @@ function App() {
   );
 }
 
-/*
-<TabForm
-          tab={tab}
-          updateTabData={updateTabData}
-          position={position}
-          getEmptyTab={getEmptyTab}
-          addNewTab={addNewTab}
-          deleteTab={deleteTab}
-        />
-*/
-
 export default App;
+
+/*
+
+*/

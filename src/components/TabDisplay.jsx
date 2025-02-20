@@ -41,7 +41,7 @@ export default function TabDisplay({
                 key={frame.id}
                 className={
                   position.measure === measureIndex &&
-                  position.index === frameIndex
+                  position.frame === frameIndex
                     ? "tab-frame tab-current-pos"
                     : "tab-frame"
                 }
