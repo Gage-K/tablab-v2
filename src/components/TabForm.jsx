@@ -4,9 +4,10 @@ import PropTypes from "prop-types";
 export default function TabForm({
   tab,
   updateTabData,
-  position,
+  measure,
+  frame,
   getEmptyTab,
-  addNewTab,
+  addNewFrame,
   deleteTab,
 }) {
   // CONSTANTS
@@ -17,10 +18,13 @@ export default function TabForm({
   ];
 
   // STATES
-  const [formData, setFormData] = useState(tab[position].notes);
+  const [formData, setFormData] = useState(tab[measure][frame].notes);
 
   // HOOKS
-  const currentNotes = useMemo(() => tab[position]?.notes, [tab, position]);
+  const currentNotes = useMemo(
+    () => tab[measure][frame]?.notes,
+    [tab, measure, frame]
+  );
 
   useEffect(() => {
     // Whenever user's current position changes, update formData to current position
@@ -41,7 +45,7 @@ export default function TabForm({
     // prevent page reload from pressing save
     Event.preventDefault();
     // updates tab with formData
-    updateTabData(position, formData);
+    updateTabData(measure, frame, formData);
   }
 
   // maps over each string; for each string
@@ -81,10 +85,13 @@ export default function TabForm({
       </form>
       <div className="form-button-group">
         <button onClick={() => setFormData(getEmptyTab().notes)}>Clear</button>
-        <button onClick={() => addNewTab(position, false)}>Duplicate</button>
+        <button onClick={() => addNewFrame(measure, frame, false)}>
+          Duplicate
+        </button>
         <button
-          onClick={() => deleteTab(tab[position].id)}
-          disabled={tab.length === 1}>
+          onClick={() => deleteTab(frame, measure)}
+          /*disabled={tab.length === 1}*/
+        >
           Delete
         </button>
       </div>
@@ -95,8 +102,9 @@ export default function TabForm({
 TabForm.propTypes = {
   tab: PropTypes.array.isRequired,
   updateTabData: PropTypes.func.isRequired,
-  position: PropTypes.number.isRequired,
+  measure: PropTypes.number.isRequired,
+  frame: PropTypes.number.isRequired,
   getEmptyTab: PropTypes.func.isRequired,
-  addNewTab: PropTypes.func.isRequired,
+  addNewFrame: PropTypes.func.isRequired,
   deleteTab: PropTypes.func.isRequired,
 };
