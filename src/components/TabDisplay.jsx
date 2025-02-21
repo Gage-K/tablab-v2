@@ -10,61 +10,103 @@ export default function TabDisplay({
   addNewMeasure,
 }) {
   const renderTuning = (
-    <div className="tab-frame">
-      {tuning.toReversed().map((note) => (
-        <p key={nanoid()}>{note}</p>
+    <div className="td-tuning">
+      {tuning.toReversed().map((note, index) => (
+        <p className="td-tuning-note" key={index}>
+          {note}
+        </p>
       ))}
     </div>
   );
+
+  function interpretNote(note) {
+    return note === -2 ? "\u00A0\u00A0" : note === -1 ? "X" : note;
+  }
+
+  // TAB CHUNKING
+  const flattenedTab = tab.flatMap((measure, measureIndex) =>
+    measure.map((frame, frameIndex) => ({
+      frame,
+      measureIndex,
+      frameIndex,
+    }))
+  );
+
+  const chunkSize = 10;
+
+  const chunkedTab = [];
+  for (let i = 0; i < flattenedTab.length; i += chunkSize) {
+    console.log(i);
+    chunkedTab.push(flattenedTab.slice(i, i + chunkSize));
+  }
+
   return (
-    // maps over all of the tab and for each frane of tab:
-    //      add an onClick that updates position
-    //      if position = index of frame, add current class
-    //      map over the array of notes in that frame
-    //          display the fretted positions in notes array
-
-    <section className="tab-display">
-      <span>||</span>
-      {renderTuning}
-      <span>|</span>
-
-      {tab.map((measure, measureIndex) => (
-        <div key={measureIndex} className="tab-measure-container">
-          <button
-            className="button-plus"
-            onClick={() => addNewFrame(measureIndex, -1, true)}>
-            +
-          </button>
-          {measure.map((frame, frameIndex) => (
-            <div key={frameIndex} className="tab-frame-container">
+    <section className="td-display">
+      {chunkedTab.map((chunk, chunkIndex) => (
+        <div className="td-row" key={chunkIndex}>
+          {renderTuning}
+          {chunkIndex === 0 && (
+            <>
+              <button
+                className="button-plus first"
+                onClick={() => addNewMeasure(-1)}>
+                + Insert measure
+              </button>
+            </>
+          )}
+          {chunk.map((frameData) => (
+            <div className="td-pre-frame" key={nanoid()}>
+              {frameData.frameIndex === 0 && (
+                <>
+                  <div className="td-measure-bar"></div>
+                  <button
+                    className="button-plus"
+                    onClick={() =>
+                      addNewFrame(frameData.measureIndex, -1, true)
+                    }>
+                    +
+                  </button>
+                </>
+              )}
               <div
-                key={frame.id}
                 className={
-                  position.measure === measureIndex &&
-                  position.frame === frameIndex
-                    ? "tab-frame tab-current-pos"
-                    : "tab-frame"
+                  position.measure === frameData.measureIndex &&
+                  position.frame === frameData.frameIndex
+                    ? "td-frame td-current-pos"
+                    : "td-frame"
                 }
-                onClick={() => updatePosition(measureIndex, frameIndex)}>
-                {frame.notes.map((note) => (
-                  <p key={frame.notes.indexOf(note)}>{note.fret}</p>
+                onClick={() =>
+                  updatePosition(frameData.measureIndex, frameData.frameIndex)
+                }>
+                {frameData.frame.notes.map((note, noteIndex) => (
+                  <p key={noteIndex}>{interpretNote(note.fret)}</p>
                 ))}
               </div>
               <button
                 className="button-plus"
-                onClick={() => addNewFrame(measureIndex, frameIndex, true)}>
+                onClick={() =>
+                  addNewFrame(
+                    frameData.measureIndex,
+                    frameData.frameIndex,
+                    true
+                  )
+                }>
                 +
               </button>
             </div>
           ))}
-          <span>|</span>
+          {chunkIndex === chunkedTab.length - 1 && (
+            <>
+              <div className="td-measure-bar"></div>
+              <button
+                className="button-plus last"
+                onClick={() => addNewMeasure(tab.length)}>
+                + Insert measure
+              </button>
+            </>
+          )}
         </div>
       ))}
-      <button
-        className="button-plus last"
-        onClick={() => addNewMeasure(tab.length)}>
-        +
-      </button>
     </section>
   );
 }
@@ -77,25 +119,3 @@ TabDisplay.propTypes = {
   addNewFrame: PropTypes.func.isRequired,
   addNewMeasure: PropTypes.func.isRequired,
 };
-
-/*
-{tab.map((frame, index) => (
-        <div key={nanoid()} className="tab-frame-container">
-          <div
-            key={frame.id}
-            className={
-              index === position ? "tab-current-pos tab-frame" : "tab-frame"
-            }
-            onClick={() => updatePosition(index)}>
-            {frame.notes.map((note) => (
-              <p key={frame.notes.indexOf(note)}>{note.fret}</p>
-            ))}
-          </div>
-          <button
-            className="button-plus"
-            onClick={() => addNewTab(index, true)}>
-            +
-          </button>
-        </div>
-      ))}
-*/
