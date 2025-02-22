@@ -8,6 +8,29 @@
 
 - [ ] Implement leaving notes feature for measures
 - [ ] On delete, keep position if it exists; if not, move back 1;
+- [ ] Set up useContext()
+- [ ] Add further controls:
+  - [ ] Insert next/prev measure
+  - [ ] Insert next/prev frame
+
+## Tab Display
+
+- [ ] Implement note & chord finder
+- [ ] Consider a way to manage chunk calculation based on number of measures in chunk
+
+## Tab Form
+
+- [ ] Allow for different number of strings to be selected
+- [ ] Automatically render fieldsets based on number of strings
+
+## Mobile
+
+## a11y
+
+- [ ] Implement a11y to display
+
+## Completed Graveyard:
+
 - [x] Add comments to checkIfPositionExists() to be more readable (possibly refactor)
 - [x] Refactor to allow for measure grouping
   - [x] Update buttons in TabDisplay
@@ -18,23 +41,11 @@
   - [x] Update default data to reflect this
   - [x] Display measure start and end
   - [x] Update position (maybe as measure and then frame)
-
-## Tab Display
-
-- [ ] Implement note & chord finder
 - [x] Create a max-width for display and add wrapping
-- [ ] Consider a way to manage chunk calculation based on number of measures in chunk
-
 - [x] Finish tab display for all tab
 - [x] Conditionally render background color based on if current position
 - [x] Have current position update onClick
 - [x] Add hover styling
-
-## Tab Form
-
-- [ ] Allow for different number of strings to be selected
-- [ ] Automatically render fieldsets based on number of strings
-
 - [x] Implement `clear`
   - [x] set formData frets & style to `null`
   - [x] update formData
@@ -51,9 +62,3 @@
   - [x] onChange event for formData
 - [x] Impelemnt `save`
   - [x] set tabData of spec id to formData
-
-## Mobile
-
-## a11y
-
-- [ ] Implement a11y to display
