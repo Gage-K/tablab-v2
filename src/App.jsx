@@ -167,8 +167,10 @@ function App() {
           : prevMeasure
       )
     );
-    // move backwards in position
-    updatePosition(measure, frame - 1);
+    // if position after deletion exists, move there; if not, move backwards in position
+    isExistingPosition(measure, frame + 1) || isExistingPosition(measure + 1, 0)
+      ? updatePosition(measure, frame)
+      : updatePosition(measure, frame - 1);
   }
 
   function updateTabData(measure, index, formData) {
