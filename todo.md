@@ -9,12 +9,13 @@
 ## App Wide
 
 - [ ] Implement leaving notes feature for measures
-- [ ] On delete, keep position if it exists; if not, move back 1;
 - [ ] Set up useContext()
-- [ ] Add further controls:
-  - [ ] Insert next/prev measure
-  - [ ] Insert next/prev frame
-- [ ] Review need for useMemo in tab form
+- [ ] Improve styling of editor controls
+- [ ] Improve styling of song details
+
+## Song Details
+
+- [ ] Allow editing
 
 ## Tab Display
 
@@ -24,6 +25,10 @@
 
 - [ ] Allow for different number of strings to be selected
 - [ ] Automatically render fieldsets based on number of strings
+- [ ] Make editor controls sticky (maybe reconsider how to structure html)
+- [ ] Remove duplicated editor control buttons
+- [ ] Create grid layout for each string of form to enable x-axis scrolling
+- [ ] remove fieldset styling
 
 ## Mobile
 
@@ -33,6 +38,11 @@
 
 ## Completed Graveyard:
 
+- [x] On delete, keep position if it exists; if not, move back 1;
+- [x] Add further controls:
+  - [x] Insert next/prev measure
+  - [x] Insert next/prev frame
+- [x] Review need for useMemo in tab form
 - [x] Consider a way to manage chunk calculation based on number of measures in chunk
 - [x] If in the last frame of a measure is deleted, app breaks (has to do with updatePosition handling in deleteFrame())
 - [x] Add comments to checkIfPositionExists() to be more readable (possibly refactor)
