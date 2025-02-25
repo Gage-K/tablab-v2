@@ -10,6 +10,8 @@ export default function TabDisplay({
   addNewFrame,
   addNewMeasure,
 }) {
+  console.log(tuning);
+  /*
   const renderTuning = (
     <div className="td-grid-tuning">
       {tuning.toReversed().map((note, index) => (
@@ -19,8 +21,7 @@ export default function TabDisplay({
       ))}
     </div>
   );
-
-  console.log(position);
+  */
 
   function interpretNote(note) {
     return note === -2 ? "\u00A0\u00A0" : note === -1 ? "X" : note;
@@ -38,7 +39,6 @@ export default function TabDisplay({
   return (
     <>
       <section className="td-grid">
-        {renderTuning}
         {flattenedTab.map((tabChunk, tabChunkIndex) => (
           <Fragment key={nanoid()}>
             {tabChunkIndex === 0 && (

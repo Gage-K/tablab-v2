@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
 import PropTypes from "prop-types";
-import { CaretCircleDown, CaretCircleUp } from "@phosphor-icons/react";
 
 export default function TabForm({
   tab,
@@ -8,8 +7,6 @@ export default function TabForm({
   measure,
   frame,
   getEmptyFrame,
-  addNewFrame,
-  deleteTab,
 }) {
   // CONSTANTS
   const strings = [1, 2, 3, 4, 5, 6]; // eventually this will be customizable

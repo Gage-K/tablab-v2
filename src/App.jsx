@@ -1,5 +1,5 @@
 // REACT IMPORTS
-import { useState, createContext, useEffect } from "react";
+import { useState, createContext } from "react";
 import { nanoid } from "nanoid";
 
 // STYLE IMPORTS
@@ -8,8 +8,6 @@ import "./App.css";
 // COMPONENTS IMPORTS
 import TabDetails from "./components/TabDetails";
 import TabDisplay from "./components/TabDisplay";
-import TabForm from "./components/TabForm";
-import EditorControls from "./components/EditorControls";
 import Editor from "./components/Editor";
 
 // DATA IMPORTS
@@ -31,6 +29,7 @@ function App() {
   function handleOpeningEditor() {
     setEditorIsOpen((prev) => !prev);
   }
+
   function isExistingPosition(measure, frame) {
     return tab[measure] != undefined ? tab[measure][frame] != undefined : false;
   }
@@ -42,10 +41,10 @@ function App() {
   function isOnlyMeasure() {
     return tab.length === 1;
   }
-
+  /*
   function isLastFrame(measure, frame) {
     return tab[measure].length - 1 === frame;
-  }
+  }*/
 
   function updatePosition(measure, frame) {
     // If position exists, update it
@@ -158,6 +157,7 @@ function App() {
     setTab((prev) => prev.filter((prevMeasure, index) => index != measure));
     updatePosition(measure - 1, tab[measure - 1]?.length - 1);
   }
+
   function deleteFrame(frame, measure) {
     if (isOnlyFrame(measure)) {
       if (isOnlyMeasure()) {
