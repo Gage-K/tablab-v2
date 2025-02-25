@@ -1,5 +1,5 @@
 // REACT IMPORTS
-import { useState } from "react";
+import { useState, createContext, useEffect } from "react";
 import { nanoid } from "nanoid";
 
 // STYLE IMPORTS
@@ -9,9 +9,12 @@ import "./App.css";
 import TabDetails from "./components/TabDetails";
 import TabDisplay from "./components/TabDisplay";
 import TabForm from "./components/TabForm";
+import EditorControls from "./components/EditorControls";
 
 // DATA IMPORTS
 import defaultTab from "./data/defaultTab.json";
+
+const TabContext = createContext();
 
 function App() {
   // CONSTANTS (FOR TESTING)
@@ -33,6 +36,10 @@ function App() {
 
   function isOnlyMeasure() {
     return tab.length === 1;
+  }
+
+  function isLastFrame(measure, frame) {
+    return tab[measure].length - 1 === frame;
   }
 
   function updatePosition(measure, frame) {
@@ -146,7 +153,6 @@ function App() {
     setTab((prev) => prev.filter((prevMeasure, index) => index != measure));
     updatePosition(measure - 1, tab[measure - 1]?.length - 1);
   }
-
   function deleteFrame(frame, measure) {
     if (isOnlyFrame(measure)) {
       if (isOnlyMeasure()) {
@@ -167,9 +173,13 @@ function App() {
           : prevMeasure
       )
     );
+
     // if position after deletion exists, move there; if not, move backwards in position
-    isExistingPosition(measure, frame + 1) || isExistingPosition(measure + 1, 0)
+
+    isExistingPosition(measure, frame + 1)
       ? updatePosition(measure, frame)
+      : isExistingPosition(measure + 1, 0)
+      ? updatePosition(measure + 1, 0)
       : updatePosition(measure, frame - 1);
   }
 
@@ -187,7 +197,7 @@ function App() {
   }
 
   return (
-    <>
+    <TabContext.Provider>
       <main>
         <TabDetails
           song={tabDetails.song}
@@ -206,15 +216,10 @@ function App() {
           addNewFrame={addNewFrame}
           deleteTab={deleteFrame}
         />
-
-        <button
-          onClick={() => updatePosition(position.measure, position.frame - 1)}>
-          Previous position
-        </button>
-        <button
-          onClick={() => updatePosition(position.measure, position.frame + 1)}>
-          Next position
-        </button>
+        <EditorControls
+          movePrev={() => updatePosition(position.measure, position.frame - 1)}
+          moveNext={() => updatePosition(position.measure, position.frame + 1)}
+        />
 
         <TabDisplay
           tab={tab}
@@ -225,12 +230,13 @@ function App() {
           tuning={tabDetails.tuning}
         />
       </main>
-    </>
+    </TabContext.Provider>
   );
 }
 
 export default App;
 
+export { TabContext };
 /*
 
 */

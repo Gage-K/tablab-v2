@@ -18,15 +18,16 @@ export default function TabForm({
     19, 20, 21, 22, 23, 24,
   ];
 
-  // STATES
-  const [formData, setFormData] = useState(tab[measure][frame].notes);
-  const [isOpen, setIsOpen] = useState(true);
-
-  // HOOKS
   const currentNotes = useMemo(
     () => tab[measure][frame]?.notes,
     [tab, measure, frame]
   );
+
+  // STATES
+  const [formData, setFormData] = useState(currentNotes);
+  const [isOpen, setIsOpen] = useState(true);
+
+  // HOOKS
 
   useEffect(() => {
     // Whenever user's current position changes, update formData to current position

@@ -116,6 +116,10 @@ main {
   gap: 1rem;
 }
 
+form {
+  overflow-x: scroll;
+}
+
 fieldset {
   display: flex;
   align-items: flex-end;

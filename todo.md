@@ -4,6 +4,8 @@
 
 - [ ] Remove testing defaults (defaultTab.json references)
 
+## Bugs
+
 ## App Wide
 
 - [ ] Implement leaving notes feature for measures
@@ -12,11 +14,11 @@
 - [ ] Add further controls:
   - [ ] Insert next/prev measure
   - [ ] Insert next/prev frame
+- [ ] Review need for useMemo in tab form
 
 ## Tab Display
 
 - [ ] Implement note & chord finder
-- [ ] Consider a way to manage chunk calculation based on number of measures in chunk
 
 ## Tab Form
 
@@ -31,6 +33,8 @@
 
 ## Completed Graveyard:
 
+- [x] Consider a way to manage chunk calculation based on number of measures in chunk
+- [x] If in the last frame of a measure is deleted, app breaks (has to do with updatePosition handling in deleteFrame())
 - [x] Add comments to checkIfPositionExists() to be more readable (possibly refactor)
 - [x] Refactor to allow for measure grouping
   - [x] Update buttons in TabDisplay
