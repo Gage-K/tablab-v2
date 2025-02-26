@@ -16,7 +16,7 @@ export default function Editor({
   updateTabData,
 }) {
   return (
-    <section className="editor">
+    <section className="tf-editor tab-header">
       <EditorControls
         handleOpeningEditor={handleOpeningEditor}
         isOpen={editorIsOpen}
