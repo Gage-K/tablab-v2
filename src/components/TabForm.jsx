@@ -40,6 +40,20 @@ export default function TabForm({
     );
   }
 
+  function updateStyle(Event, string) {
+    const { value } = Event.target;
+    setFormData((prev) =>
+      prev.map((item, index) =>
+        index === string - 1 ? { ...item, style: value } : item
+      )
+    );
+  }
+
+  function clearHandler(Event) {
+    Event.preventDefault();
+    setFormData(getEmptyFrame().notes);
+  }
+
   function saveFormData(Event) {
     // prevent page reload from pressing save
     Event.preventDefault();
@@ -47,53 +61,160 @@ export default function TabForm({
     updateTabData(measure, frame, formData);
   }
 
-  // maps over each string; for each string
-  //    map over frets and create a radio button/field + label
   const allFields = (
     <>
       {strings.map((string) => (
-        <fieldset key={string} className="form-string">
-          <span className="legend">
-            <legend>{`String ${string}`}</legend>
+        <fieldset className="tf-string" key={`String ${string}`}>
+          <legend className="visually-hidden">{`String ${string}`}</legend>
+          <span className="tf-string-legend tf-component">
+            <span className={string > 1 ? "visually-hidden" : ""}>String </span>
+            <span>{string}</span>
           </span>
-          <div className="form-string-fret">
-            {frets.map((fret) => (
-              <label key={fret} className="form-fret">
-                {string === 1
-                  ? fret === -2
-                    ? "Ø"
-                    : fret === -1
-                    ? "X"
-                    : fret
-                  : null}
 
-                <input
-                  onChange={(Event) => updateFret(Event, string)}
-                  type="radio"
-                  name={`string${string}`}
-                  value={fret}
-                  checked={formData[string - 1].fret === fret}
-                />
-              </label>
+          {/*<fieldset className="tf-fretboard">
+            <legend className="tf-fretboard-legend">
+              <span className="visually-hidden">Select a fret</span>
+            </legend>
+            {frets.map((fret) => (
+              <>
+                <label key={fret} className="tf-fret">
+                  <span
+                    className={
+                      string > 1
+                        ? "visually-hidden tf-fret-label"
+                        : "tf-fret-label"
+                    }>
+                    {fret === -2 ? "Ø" : fret === -1 ? "X" : fret}
+                  </span>
+
+                  <input
+                    className="tf-fret-input"
+                    onChange={(Event) => updateFret(Event, string)}
+                    type="radio"
+                    name={`string${string}`}
+                    value={fret}
+                    checked={formData[string - 1].fret === fret}
+                  />
+                </label>
+              </>
             ))}
-          </div>
+          </fieldset>*/}
+
+          <label className="tf-fretboard tf-component">
+            <span className={string > 1 ? "visually-hidden" : ""}>
+              <span className="visually-hidden">Select a </span>Fret
+            </span>
+            <select
+              value={formData[string - 1].fret}
+              onChange={(Event) => updateFret(Event, string)}>
+              {frets.map((fret) => (
+                <option key={fret} value={fret}>
+                  {fret === -2 ? "" : fret === -1 ? "X" : fret}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className="tf-style tf-component">
+            <span className={string > 1 ? "visually-hidden" : ""}>
+              <span className="visually-hidden">Select a </span>Style
+            </span>
+            <select
+              disabled={formData[string - 1].fret < 0}
+              className="tf-style-selector"
+              value={formData[string - 1].style}
+              onChange={(Event) => updateStyle(Event, string)}>
+              <option
+                value="none"
+                className="tf-style-option"
+                defaultChecked={true}>
+                None
+              </option>
+              <option value="bend" className="tf-style-option">
+                Bend
+              </option>
+              <option value="slide" className="tf-style-option">
+                Slide
+              </option>
+              <option value="hammerOn" className="tf-style-option">
+                Hammer On
+              </option>
+              <option value="pullOff" className="tf-style-option">
+                Pull Off
+              </option>
+              <option value="harmonic" className="tf-style-option">
+                Harmonic
+              </option>
+              <option value="tap" className="tf-style-option">
+                Tap
+              </option>
+            </select>
+          </label>
         </fieldset>
       ))}
     </>
   );
 
+  // maps over each string; for each string
+  //    map over frets and create a radio button/field + label
+  /* const allFields = (
+    <>
+      {strings.map((string) => (
+        <>
+          <fieldset key={string} className="form-string">
+            <legend className="legend">{`String ${string}`}</legend>
+            <div className="form-string-fret">
+              {frets.map((fret) => (
+                <label key={fret} className="form-fret">
+                  {string === 1
+                    ? fret === -2
+                      ? "Ø"
+                      : fret === -1
+                      ? "X"
+                      : fret
+                    : null}
+
+                  <input
+                    onChange={(Event) => updateFret(Event, string)}
+                    type="radio"
+                    name={`string${string}`}
+                    value={fret}
+                    checked={formData[string - 1].fret === fret}
+                  />
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <label className="style">
+            Style
+            <select>
+              <option value="none" defaultChecked={true}>
+                None
+              </option>
+              <option value="bend">Bend</option>
+              <option value="slide">Slide</option>
+              <option value="hammerOn">Hammer On</option>
+              <option value="pullOff">Pull Off</option>
+              <option value="harmonic">Harmonic</option>
+              <option value="tap">Tap</option>
+            </select>
+          </label>
+        </>
+      ))}
+    </>
+  ); */
+
   return (
-    <section className="tab-form-section">
+    <div className="tf-form">
       <form onSubmit={saveFormData}>
         {allFields}
-        <button>Save</button>
+        <div className="tf-form-buttons">
+          <button>Save</button>
+          <button onClick={clearHandler}>Clear</button>
+        </div>
       </form>
-      <div className="form-button-group">
-        <button onClick={() => setFormData(getEmptyFrame().notes)}>
-          Clear
-        </button>
-      </div>
-    </section>
+    </div>
   );
 }
 
