@@ -13,7 +13,8 @@ import Editor from "./components/Editor";
 // DATA IMPORTS
 import defaultTab from "./data/defaultTab.json";
 
-const TabContext = createContext();
+const TabContext = createContext(null);
+console.log(Storage);
 
 function App() {
   // CONSTANTS (FOR TESTING)
@@ -24,6 +25,10 @@ function App() {
   const [tab, setTab] = useState(initTab);
   const [position, setPosition] = useState({ measure: 0, frame: 0 });
   const [editorIsOpen, setEditorIsOpen] = useState(true);
+  const [details, setDetails] = useState(tabDetails);
+
+  console.log("in main app");
+  console.log(details);
 
   // FUNCTIONS
   function handleOpeningEditor() {
@@ -202,39 +207,33 @@ function App() {
   }
 
   return (
-    <TabContext.Provider>
+    <TabContext.Provider value={{ details, setDetails }}>
       <main>
-        <TabDetails
-          song={tabDetails.song}
-          artist={tabDetails.artist}
-          creator={tabDetails.creator}
-          dateCreated={tabDetails.dateCreated}
-          dateModified={tabDetails.dateModified}
-          tuning={tabDetails.tuning}
-        />
+        <TabDetails />
+        <div className="main-wrapper">
+          <Editor
+            tab={tab}
+            position={position}
+            editorIsOpen={editorIsOpen}
+            addNewFrame={addNewFrame}
+            addNewMeasure={addNewMeasure}
+            deleteFrame={deleteFrame}
+            deleteMeasure={deleteMeasure}
+            getEmptyFrame={getEmptyFrame}
+            handleOpeningEditor={handleOpeningEditor}
+            updatePosition={updatePosition}
+            updateTabData={updateTabData}
+          />
 
-        <Editor
-          tab={tab}
-          position={position}
-          editorIsOpen={editorIsOpen}
-          addNewFrame={addNewFrame}
-          addNewMeasure={addNewMeasure}
-          deleteFrame={deleteFrame}
-          deleteMeasure={deleteMeasure}
-          getEmptyFrame={getEmptyFrame}
-          handleOpeningEditor={handleOpeningEditor}
-          updatePosition={updatePosition}
-          updateTabData={updateTabData}
-        />
-
-        <TabDisplay
-          tab={tab}
-          position={position}
-          updatePosition={updatePosition}
-          addNewFrame={addNewFrame}
-          addNewMeasure={addNewMeasure}
-          tuning={tabDetails.tuning}
-        />
+          <TabDisplay
+            tab={tab}
+            position={position}
+            updatePosition={updatePosition}
+            addNewFrame={addNewFrame}
+            addNewMeasure={addNewMeasure}
+            tuning={tabDetails.tuning}
+          />
+        </div>
       </main>
     </TabContext.Provider>
   );
