@@ -13,18 +13,25 @@ export default function EditorControls({
   insertMeasure,
 }) {
   return (
-    <div>
+    <div className="tf-editor-controls">
       <button onClick={handleOpeningEditor}>
         {isOpen ? <CaretCircleUp /> : <CaretCircleDown />}
         {isOpen ? " Close Editor" : " Open Editor"}
       </button>
-      <button onClick={movePrev}>Previous Position</button>
-      <button onClick={moveNext}>Next Position</button>
-      <button onClick={duplicate}>Duplicate</button>
-      <button onClick={deleteFrame}>Delete Frame</button>
-      <button onClick={deleteMeasure}>Delete Measure</button>
-      <button onClick={insertFrame}>New Frame</button>
-      <button onClick={insertMeasure}>New Measure</button>
+      <div className="tf-editor-controls-supp">
+        <div></div>
+        <button onClick={movePrev}>Previous Position</button>
+        <button onClick={moveNext}>Next Position</button>
+        <button onClick={duplicate}>Duplicate</button>
+        <button onClick={insertFrame}>New Frame</button>
+        <button onClick={insertMeasure}>New Measure</button>
+        <button className="danger" onClick={deleteFrame}>
+          Delete Frame
+        </button>
+        <button className="danger" onClick={deleteMeasure}>
+          Delete Measure
+        </button>
+      </div>
     </div>
   );
 }
