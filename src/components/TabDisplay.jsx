@@ -23,8 +23,28 @@ export default function TabDisplay({
     </div>
   );
 
-  function interpretNote(note) {
-    return note === -2 ? "\u00A0\u00A0" : note === -1 ? "X" : note;
+  function interpretNote(note, style) {
+    const newNote = note === -2 ? "\u00A0\u00A0" : note === -1 ? "X" : note;
+    const interpretedNote =
+      style === "none"
+        ? newNote
+        : style === "hammerOn"
+        ? `h${newNote}`
+        : style === "bend"
+        ? `${newNote}b`
+        : style === "pullOff"
+        ? `p${newNote}`
+        : style === "slide"
+        ? `${newNote}/`
+        : style === "slide"
+        ? `${newNote}/`
+        : style === "harmonic"
+        ? `<${newNote}>`
+        : style === "tap"
+        ? `${newNote}t`
+        : newNote;
+
+    return interpretedNote;
   }
 
   // removes tab nesting and creates one continuous tab array
@@ -79,7 +99,7 @@ export default function TabDisplay({
                 }>
                 {tabChunk.frame.notes.map((note, noteIndex) => (
                   <p className="td-grid-note" key={noteIndex}>
-                    {interpretNote(note.fret)}
+                    {interpretNote(note.fret, note.style)}
                   </p>
                 ))}
               </div>
