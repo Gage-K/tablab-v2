@@ -3,6 +3,8 @@ import { useState, useContext, createContext, useEffect } from "react";
 
 import defaultTab from "../data/defaultTab.json";
 
+import { nanoid } from "nanoid";
+
 const TablabContext = createContext();
 
 export default function TablabContextLayout() {
@@ -45,6 +47,59 @@ export default function TablabContextLayout() {
     );
   }
 
+  function createNewTab() {
+    const newTab = {
+      id: nanoid(),
+      details: {
+        song: "Untitled",
+        artist: "Artist",
+        creator: "",
+        dateCreated: 20250101,
+        dateModified: 20250101,
+        tuning: ["E", "B", "G", "D", "A", "E"],
+      },
+      tab: [
+        [
+          {
+            id: 1,
+            notes: [
+              {
+                fret: 0,
+                style: "none",
+              },
+              {
+                fret: 0,
+                style: "none",
+              },
+              {
+                fret: 0,
+                style: "none",
+              },
+              {
+                fret: 0,
+                style: "none",
+              },
+              {
+                fret: 0,
+                style: "none",
+              },
+              {
+                fret: 0,
+                style: "none",
+              },
+            ],
+          },
+        ],
+      ],
+    };
+
+    setTabs((prevTabs) => [...prevTabs, newTab]);
+  }
+
+  function deleteTab(id) {
+    setTabs((prevTabs) => prevTabs.filter((tab) => tab.id != id));
+  }
+
   useEffect(() => {
     localStorage.setItem("allTabs", JSON.stringify(tabs));
   }, [tabs]);
@@ -52,11 +107,9 @@ export default function TablabContextLayout() {
   console.log(tabs);
 
   return (
-    <TablabContext.Provider value={{ tabs, updateDetails, updateTab }}>
-      <button
-        onClick={() => localStorage.setItem("allTabs", defaultTab.allTabs)}>
-        Reset
-      </button>
+    <TablabContext.Provider
+      value={{ tabs, updateDetails, updateTab, createNewTab, deleteTab }}>
+      <button onClick={() => localStorage.clear()}>Reset</button>
       <Outlet />
     </TablabContext.Provider>
   );
