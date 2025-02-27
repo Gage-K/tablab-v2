@@ -12,7 +12,8 @@
 - [ ] Set up useContext()
 - [ ] Fix header sizing
 - [ ] improve mobile experience
-- [ ] implement update fret style
+- [x] implement update fret style
+- [ ] Refactor for data structure of multiple tabs
 
 ## Song Details
 
