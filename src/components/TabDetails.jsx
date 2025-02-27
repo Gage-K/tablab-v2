@@ -4,7 +4,7 @@ import { TabContext } from "../App";
 
 import PropTypes from "prop-types";
 
-import { CaretCircleDown, CaretCircleUp } from "@phosphor-icons/react";
+import { PencilSimple, XCircle } from "@phosphor-icons/react";
 
 export default function TabDetails() {
   const notes = [
@@ -27,16 +27,22 @@ export default function TabDetails() {
 
   const { details, setDetails } = useContext(TabContext);
 
-  console.log("in details");
-  console.log(details);
-
   return (
     <section className="tab-details tab-header">
       <div className="tab-details-header">
-        <h1>Song: {details.song}</h1>
-        <button onClick={() => setIsShown((prev) => !prev)}>
-          {isShown ? <CaretCircleUp /> : <CaretCircleDown />}
-        </button>
+        <div className="tab-details-container">
+          <div className="tab-details-top-wrapper">
+            <h1>{details.song}</h1>
+            <button onClick={() => setIsShown((prev) => !prev)}>
+              {isShown ? <XCircle size={20} /> : <PencilSimple size={20} />}
+            </button>
+          </div>
+
+          <div className="tab-details-sub-container">
+            <p>By {details.artist}</p>
+            <p>Tuning: {details.tuning.toReversed().join("")}</p>
+          </div>
+        </div>
       </div>
       {isShown ? (
         <form>
