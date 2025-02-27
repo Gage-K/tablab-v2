@@ -1,6 +1,4 @@
 // REACT IMPORTS
-import { useState, createContext, useEffect } from "react";
-import { nanoid } from "nanoid";
 import { BrowserRouter, Routes, Route } from "react-router";
 
 // STYLE IMPORTS
