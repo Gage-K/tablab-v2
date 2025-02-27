@@ -3,12 +3,8 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.jsx";
 
-function TabLab() {
-  return <App />;
-}
-
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <TabLab />
+    <App />
   </StrictMode>
 );
