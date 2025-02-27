@@ -26,7 +26,7 @@ export default function TabDetails() {
 
   const [isShown, setIsShown] = useState(true);
 
-  const { id, details } = useContext(TabContext);
+  const { id } = useContext(TabContext);
   const { tabs, updateDetails } = useContext(TablabContext);
 
   const currentTab = tabs.find((tab) => tab.id === id);

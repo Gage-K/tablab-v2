@@ -1,8 +1,6 @@
 import PropTypes from "prop-types";
 import { nanoid } from "nanoid";
 import { Fragment } from "react";
-import { TabContext } from "./MainTabEditor";
-import { useContext } from "react";
 
 export default function TabDisplay({
   tab,
@@ -12,8 +10,6 @@ export default function TabDisplay({
   addNewMeasure,
   tuning,
 }) {
-  const { details } = useContext(TabContext);
-
   const renderTuning = (
     <div className="td-grid-tuning">
       {tuning.map((note, index) => (

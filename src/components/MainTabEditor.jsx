@@ -12,7 +12,6 @@ import TabDisplay from "./TabDisplay";
 import Editor from "./Editor";
 
 // DATA IMPORTS
-import defaultTab from "../data/defaultTab.json";
 import { TablabContext } from "../layouts/TablabContextLayout";
 
 const TabContext = createContext();
@@ -34,30 +33,16 @@ export default function MainTabEditor() {
   // CONSTANTS (FOR TESTING)
 
   // STATES
-  const [allTabs, setAllTabs] = useState(
-    JSON.parse(localStorage.getItem("allTabs")) || defaultTab.allTabs
-  );
-
-  const tabIndex = 1;
-
-  const tabDetails = allTabs[tabIndex].details; // general details about tab
-  const initTab = allTabs[tabIndex].tab; // init testing notes for tab --> change later to empty init
 
   const [tabData, setTabData] = useState({});
-
   const isLoading = Object.keys(tabData).length === 0;
-
   const [tab, setTab] = useState(tabData.tab);
-
   const [position, setPosition] = useState({ measure: 0, frame: 0 });
   const [editorIsOpen, setEditorIsOpen] = useState(true);
-  const [details, setDetails] = useState(tabData.details);
 
   // HOOKS
 
   useEffect(() => {
-    console.log("--in editor--");
-    console.log(tab);
     updateTab(tabId, tab);
   }, [tab]);
 
