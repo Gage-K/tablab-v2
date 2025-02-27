@@ -1,10 +1,11 @@
 import { useState, useContext } from "react";
 
-import { TabContext } from "../App";
+import { TabContext } from "./MainTabEditor";
 
 import PropTypes from "prop-types";
 
 import { PencilSimple, XCircle } from "@phosphor-icons/react";
+import { TablabContext } from "../layouts/TablabContextLayout";
 
 export default function TabDetails() {
   const notes = [
@@ -25,22 +26,32 @@ export default function TabDetails() {
 
   const [isShown, setIsShown] = useState(true);
 
-  const { details, setDetails } = useContext(TabContext);
+  const { id, details } = useContext(TabContext);
+  const { tabs, updateDetails } = useContext(TablabContext);
+
+  const currentTab = tabs.find((tab) => tab.id === id);
+
+  function handleTuning(event, string, value) {
+    const newTuning = currentTab.details.tuning.map((note, index) =>
+      index === string ? value : note
+    );
+    updateDetails(id, event.target.name, newTuning);
+  }
 
   return (
     <section className="tab-details tab-header">
       <div className="tab-details-header">
         <div className="tab-details-container">
           <div className="tab-details-top-wrapper">
-            <h1>{details.song}</h1>
+            <h1>{currentTab.details.song}</h1>
             <button onClick={() => setIsShown((prev) => !prev)}>
               {isShown ? <XCircle size={20} /> : <PencilSimple size={20} />}
             </button>
           </div>
 
           <div className="tab-details-sub-container">
-            <p>By {details.artist}</p>
-            <p>Tuning: {details.tuning.toReversed().join("")}</p>
+            <p>By {currentTab.details.artist}</p>
+            <p>Tuning: {currentTab.details.tuning.toReversed().join("")}</p>
           </div>
         </div>
       </div>
@@ -50,9 +61,9 @@ export default function TabDetails() {
           <input
             name="song"
             type="text"
-            value={details.song}
+            value={currentTab.details.song}
             onChange={(event) =>
-              setDetails((prev) => ({ ...prev, song: event.target.value }))
+              updateDetails(id, event.target.name, event.target.value)
             }
           />
 
@@ -60,9 +71,9 @@ export default function TabDetails() {
           <input
             name="artist"
             type="text"
-            value={details.artist}
+            value={currentTab.details.artist}
             onChange={(event) =>
-              setDetails((prev) => ({ ...prev, artist: event.target.value }))
+              updateDetails(id, event.target.name, event.target.value)
             }></input>
 
           <fieldset>
@@ -71,14 +82,10 @@ export default function TabDetails() {
               <label key={string}>
                 {`String ${string}`}
                 <select
-                  value={details.tuning[string - 1]}
+                  name="tuning"
+                  value={currentTab.details.tuning[string - 1]}
                   onChange={(event) =>
-                    setDetails((prev) => ({
-                      ...prev,
-                      tuning: prev.tuning.map((note, index) =>
-                        index === string - 1 ? event.target.value : note
-                      ),
-                    }))
+                    handleTuning(event, string - 1, event.target.value)
                   }>
                   {notes.map((note) => (
                     <option value={note} key={note}>

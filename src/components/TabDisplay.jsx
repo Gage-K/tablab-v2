@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { nanoid } from "nanoid";
 import { Fragment } from "react";
-import { TabContext } from "../App";
+import { TabContext } from "./MainTabEditor";
 import { useContext } from "react";
 
 export default function TabDisplay({
