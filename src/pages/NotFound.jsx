@@ -12,8 +12,10 @@ export default function NotFound() {
       <Header />
       <PageWrapper>
         <main className="">
-          <h1 className="text-3xl font-bold my-4">Page not found!</h1>
-          <div className="p-4 bg-neutral-100 border border-neutral-200 rounded-sm grid place-items-center gap-y-2">
+          <h1 className="text-5xl font-bold text-neutral-800 pt-8 mb-10">
+            Page not found!
+          </h1>
+          <div className="p-4 bg-neutral-100 border border-neutral-200 rounded-sm grid place-items-center gap-y-2 ">
             <p className="font-semibold mb-8">
               It looks like the page you were trying to view is broken or
               doesn&apos;t exist anymore.
