@@ -1,43 +1,33 @@
 # To Do
 
-## Misc.
+## Features
 
-- [ ] Remove testing defaults (defaultTab.json references)
+### Priority 1
 
-## Bugs
+- [ ] Note & chord finder
+- [ ] Dark mode
 
-- [ ] two <main>'s in the body
-
-## App Wide
-
-- [ ] Fix header sizing
-- [ ] improve mobile experience
-- [ ] improve responsiveness css
-  - [ ] Padding/margins on all pages
-  - [ ] Create some kind of consistent container for everything
-  - [ ] Mobile tab menu
-  - [ ] Improve header in tab layout
-    - [ ] Back to dashboard
-    - [ ] top margin/padding
-
-## Dashboard
-
-- [ ] Add defualt for when no tabs exist
-
-## Song Details
-
-## Tab Display
-
-- [ ] Implement note & chord finder
-
-## Tab Form
+### Priority 2
 
 - [ ] Allow for different number of strings to be selected
 - [ ] Automatically render fieldsets based on number of strings
 
+## Content
+
+- [ ] Guide Page
+- [ ] Updates Page
+- [ ] Home Page
+- [ ] Footer
+
+## Bugs
+
 ## a11y
 
-- [ ] Implement a11y to display
+- [ ] Review display a11y
+
+## Minor Fixes
+
+- [ ] Remove testing defaults (defaultTab.json references)
 
 ## Completed Graveyard:
 
@@ -94,3 +84,14 @@
 - [x] Set up useContext()
 - [x] Refactor for data structure of multiple tabs
 - [x] remove fieldset styling
+- [x] Fix header sizing
+- [x] improve mobile experience
+- [x] improve responsiveness css
+  - [x] Padding/margins on all pages
+  - [x] Create some kind of consistent container for everything
+  - [x] Mobile tab menu
+  - [x] Improve header in tab layout
+    - [x] Back to dashboard
+    - [x] top margin/padding
+    - [x] two <main>'s in the body
+- [x] Add defualt for when no tabs exist
