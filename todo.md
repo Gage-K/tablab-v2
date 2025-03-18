@@ -6,30 +6,34 @@
 
 ## Bugs
 
+- [ ] two <main>'s in the body
+
 ## App Wide
 
-- [ ] Implement leaving notes feature for measures
-- [ ] Set up useContext()
 - [ ] Fix header sizing
 - [ ] improve mobile experience
-- [x] implement update fret style
-- [ ] Refactor for data structure of multiple tabs
+- [ ] improve responsiveness css
+  - [ ] Padding/margins on all pages
+  - [ ] Create some kind of consistent container for everything
+  - [ ] Mobile tab menu
+  - [ ] Improve header in tab layout
+    - [ ] Back to dashboard
+    - [ ] top margin/padding
+
+## Dashboard
+
+- [ ] Add defualt for when no tabs exist
 
 ## Song Details
-
-- [ ] Allow editing
 
 ## Tab Display
 
 - [ ] Implement note & chord finder
-- [ ] Implement style affectation into display interpreter
 
 ## Tab Form
 
 - [ ] Allow for different number of strings to be selected
 - [ ] Automatically render fieldsets based on number of strings
-- [ ] Create grid layout for each string of form to enable x-axis scrolling
-- [ ] remove fieldset styling
 
 ## a11y
 
@@ -79,4 +83,14 @@
 - [x] Implement user ability to update formData
   - [x] onChange event for formData
 - [x] Impelemnt `save`
+
   - [x] set tabData of spec id to formData
+
+- [x] Create grid layout for each string of form to enable x-axis scrolling
+- [x] Implement style affectation into display interpreter
+- [x] Allow editing
+- [x] implement update fret style
+- [x] Implement leaving notes feature for measures
+- [x] Set up useContext()
+- [x] Refactor for data structure of multiple tabs
+- [x] remove fieldset styling
