@@ -1,15 +1,7 @@
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import PageWrapper from "../layouts/PageWrapper";
-import {
-  NumberCircleOne,
-  NumberCircleTwo,
-  NumberCircleThree,
-  TextTSlash,
-  Globe,
-  Palette,
-  CloudX,
-} from "@phosphor-icons/react";
+import { TextTSlash, Palette, CloudX } from "@phosphor-icons/react";
 
 export default function Home() {
   const h2Style = "text-3xl font-semibold text-neutral-800 mt-8 mb-4";
