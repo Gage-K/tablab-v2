@@ -38,30 +38,33 @@ async function getUserByEmail(email) {
 
 // create function for a single user; returns new user's id
 async function insertUser(username, email, password) {
-  const values = [username, email, password, new Date()];
+  const userValues = [username, email, new Date()];
 
-  // first grabs data for any users with identical credentials
-  const emailData = await getUserByEmail(email);
-  const usernameData = await getUserByUsername(username);
-
-  // next returns errors and aborts IF email or username credentials exist in database
-  if (emailData[0]) {
-    return Error(`User with email of ${email} already exists.`);
+  try {
+    await pool.query(
+      `INSERT INTO users (username, email, created_at)
+                            VALUES ($1, $2, $3)`,
+      userValues
+    );
+  } catch (err) {
+    console.error(err);
   }
-  if (usernameData[0]) {
-    return Error(`User with email of ${username} already exists.`);
-  }
+  const userDetails = await getUserByUsername(username);
 
-  // then if no credentials already exist, create new user
-  await pool.query(
-    `INSERT INTO users (username, email, password, created_at)
-                            VALUES ($1, $2, $3, $4)`,
-    values
-  );
+  const id = userDetails[0].id;
+  const passwordValues = [password, id];
+
+  try {
+    await pool.query(
+      `INSERT INTO passwords (password, user_id) VALUES ($1, $2)`,
+      passwordValues
+    );
+  } catch (err) {
+    console.error(err);
+  }
 
   // return new user's id
-  const userDetails = await getUserByUsername(username);
-  return userDetails[0].id;
+  return id;
 }
 
 // USER UPDATE FUNCTIONS
@@ -69,49 +72,44 @@ async function insertUser(username, email, password) {
 async function updateUserPassword(id, newPassword) {
   const values = [id, newPassword];
 
-  // check if user with id exists
-
-  const userData = await getUserById(id);
-  if (!userData[0]) {
-    console.error(
-      `User with id of ${id} does not exist. Update password aborted.`
+  try {
+    await pool.query(
+      `UPDATE passwords SET password=$2 WHERE user_id=$1`,
+      values
     );
-    return;
+  } catch (err) {
+    console.error(err);
   }
-  await pool.query(`UPDATE users SET password=$2 WHERE id=$1`, values);
-  console.log(`Password for user with id of ${id} updated`);
 }
 
 async function updateUserEmail(id, newEmail) {
   const values = [id, newEmail];
 
-  // check if user with id exists
-  const userData = await getUserById(id);
-  if (!userData[0]) {
-    console.error(
-      `User with id of ${id} does not exist. Update email aborted.`
-    );
-    return;
+  try {
+    await pool.query(`UPDATE users SET email=$2 WHERE id=$1`, values);
+  } catch (err) {
+    console.error(err);
   }
-
-  await pool.query(`UPDATE users SET email=$2 WHERE id=$1`, values);
-  console.log(`Email for user with id of ${id} updated`);
 }
 
 // USER DELETE FUNCTIONS
 
 async function deleteUser(id) {
   const values = [id];
-
-  // check if user with id exists
-  const userData = await getUserById(id);
-  if (!userData[0]) {
-    console.error(`User with id of ${id} does not exist. Delete aborted.`);
-    return;
+  try {
+    await pool.query(`DELETE FROM users WHERE id=$1`, values);
+  } catch (err) {
+    console.error(err);
   }
+}
 
-  await pool.query(`DELETE FROM users WHERE id=$1`, values);
-  console.log(`User with id of ${id} deleted`);
+async function deletePassword(userId) {
+  const values = [userId];
+  try {
+    await pool.query(`DELETE FROM passwords WHERE user_id=$1`, values);
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 // TAB READ FUNCTIONS
@@ -119,6 +117,15 @@ async function deleteUser(id) {
 async function getAllTabs() {
   const { rows } = await pool.query(`SELECT * FROM tabs`);
   return rows;
+}
+
+async function getTabUser(id) {
+  const values = [id];
+  const { rows } = await pool.query(
+    `SELECT user_id FROM tabs WHERE id=$1`,
+    values
+  );
+  return rows[0].user_id;
 }
 
 async function getTabsByUser(userId) {
@@ -142,13 +149,22 @@ async function getTabsByName(tabName) {
     `SELECT * FROM tabs WHERE tab_name=$1`,
     values
   );
-  return rows;
+  return rows[0];
 }
 
 async function getTabsByArtist(artist) {
   const values = [artist];
   const { rows } = await pool.query(
     `SELECT * FROM tabs WHERE tab_artist=$1`,
+    values
+  );
+  return rows;
+}
+
+async function getUserPassword(id) {
+  const values = [id];
+  const { rows } = await pool.query(
+    `SELECT * FROM passwords WHERE user_id=$1`,
     values
   );
   return rows;
@@ -173,6 +189,22 @@ async function insertTab(userId, name, artist, tuning, tab) {
 
 // TAB UPDATE FUNCTIONS
 
+async function updateTabData(id, tabName, tabArtist, tuning, tab) {
+  const modifiedAt = new Date();
+  const values = [tabName, tabArtist, tuning, modifiedAt, tab, id];
+  await pool.query(
+    `UPDATE tabs
+     SET tab_name = $1,
+         tab_artist = $2,
+         tuning = $3,
+         modified_at = $4,
+         tab = $5
+     WHERE id = $6`,
+    values
+  );
+  console.log(`tab updated.`);
+}
+
 async function updateTabName(id, name) {
   const values = [id, name];
   const tabData = await getTabById(id);
@@ -180,7 +212,7 @@ async function updateTabName(id, name) {
     console.error(`Tab with id of ${id} does not exist. Update aborted.`);
     return;
   }
-  await pool.query(`UPDATE tabs SET name=$2 WHERE id=$1`, values);
+  await pool.query(`UPDATE tabs SET tab_name=$2 WHERE id=$1`, values);
   console.log(`Name of tab with id of ${id} updated`);
 }
 
@@ -235,6 +267,7 @@ module.exports = {
   getUserByUsername,
   getUserById,
   getUserByEmail,
+  getUserPassword,
   insertUser,
   updateUserPassword,
   updateUserEmail,
@@ -244,7 +277,9 @@ module.exports = {
   getTabsByArtist,
   getTabsByUser,
   getTabsByName,
+  getTabUser,
   insertTab,
+  updateTabData,
   updateTabName,
   updateTabArtist,
   updateTuning,
