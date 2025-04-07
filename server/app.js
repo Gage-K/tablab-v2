@@ -5,8 +5,11 @@ const tests = require("./tests/queryTests");
 require("dotenv").config();
 const indexRouter = require("./routes/index");
 const authRouter = require("./routes/auth");
+const usersRouter = require("./routes/api/users");
+const tabsRouter = require("./routes/api/tabs");
 const session = require("express-session");
 const passport = require("passport");
+const cors = require("cors");
 
 tests.runTests();
 
@@ -16,6 +19,7 @@ app.set("view engine", "ejs");
 
 app.use(session({ secret: "cats", resave: false, saveUninitialized: false }));
 app.use(passport.authenticate("session"));
+app.use(express.json());
 
 app.use((req, res, next) => {
   res.locals.currentUser = req.user;
@@ -24,8 +28,11 @@ app.use((req, res, next) => {
 });
 
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 app.use("/", indexRouter);
 app.use("/", authRouter);
+app.use("/api/user/", usersRouter);
+app.use("/api/tabs/", tabsRouter);
 
 const PORT = process.env.PORT || 3000;
 
