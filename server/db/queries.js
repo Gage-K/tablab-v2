@@ -64,7 +64,7 @@ async function insertUser(username, email, password) {
   }
 
   // return new user's id
-  return id;
+  return userDetails[0];
 }
 
 // USER UPDATE FUNCTIONS

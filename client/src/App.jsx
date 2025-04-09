@@ -11,27 +11,41 @@ import TablabContextLayout from "./layouts/TablabContextLayout";
 import NotFound from "./pages/NotFound";
 import Updates from "./pages/Updates";
 import Guide from "./pages/Guide";
+import Login from "./pages/Login";
+import Profile from "./pages/Profile";
+import Register from "./pages/Register";
+import { AuthProvider } from "./context/authProvider";
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/updates" element={<Updates />} />
-        <Route path="/guide" element={<Guide />} />
+      <AuthProvider>
+        <Routes>
+          {/* Static Public Pages */}
+          <Route path="/" element={<Home />} />
+          <Route path="/updates" element={<Updates />} />
+          <Route path="/guide" element={<Guide />} />
 
-        <Route element={<TablabContextLayout />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/editor/:tabId" element={<MainTabEditor />} />
-          <Route
-            path="/editor/*"
-            element={<Navigate to="/notfound" replace />}
-          />
-        </Route>
+          {/* Authentication Pages */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
-        <Route path="notfound" element={<NotFound />} />
-        <Route path="*" element={<Navigate to="/notfound" replace />} />
-      </Routes>
+          {/* Protected Pages */}
+          <Route path="/profile" element={<Profile />} />
+          <Route element={<TablabContextLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/editor/:tabId" element={<MainTabEditor />} />
+            <Route
+              path="/editor/*"
+              element={<Navigate to="/notfound" replace />}
+            />
+          </Route>
+
+          {/* Catch All Pages */}
+          <Route path="notfound" element={<NotFound />} />
+          <Route path="*" element={<Navigate to="/notfound" replace />} />
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 }
