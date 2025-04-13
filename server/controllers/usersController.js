@@ -3,7 +3,8 @@ const bcrypt = require("bcryptjs");
 
 async function getUser(req, res) {
   const { id } = req.params;
-  const currentUser = res.locals.currentUser ? res.locals.currentUser.id : null;
+  // const currentUser = res.locals.currentUser ? res.locals.currentUser.id : null;
+  const currentUser = req.body.user;
 
   if (currentUser !== id) {
     return res.status(403).json({ message: "You do not have access" });
