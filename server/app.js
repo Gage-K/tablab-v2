@@ -25,12 +25,6 @@ app.use(passport.initialize()); // everytime route reloads, it checks if user pr
 app.use(passport.session());
 app.use(passport.authenticate("session"));
 
-app.use((req, res, next) => {
-  console.log(req.session);
-  console.log(req.user);
-  next();
-});
-
 app.use(express.json());
 
 app.use((req, res, next) => {
@@ -41,7 +35,7 @@ app.use((req, res, next) => {
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "http://localhost:5173",
     credentials: true,
   })
 );
