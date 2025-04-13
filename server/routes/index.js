@@ -1,10 +1,8 @@
 const { Router } = require("express");
 const router = Router();
 const db = require("../db/queries");
-const indexController = require("../controllers/index");
 const usersController = require("../controllers/usersController");
 
-router.get("/", indexController.getUserData);
 router.get("/login", (req, res) => res.render("login"));
 router.get("/register", (req, res) => res.render("signup"));
 router.get("/test", (req, res) => res.render("test"));
