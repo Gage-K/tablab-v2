@@ -11,42 +11,76 @@ import TabDetails from "./TabDetails";
 import TabDisplay from "./TabDisplay";
 import Editor from "./Editor";
 import Header from "./Header";
+import useAuth from "../hooks/useAuth";
+import axios from "../api/axios";
 
 // DATA IMPORTS
 import { TablabContext } from "../layouts/TablabContextLayout";
 import PageWrapper from "../layouts/PageWrapper";
 
 const TabContext = createContext();
+const TAB_URL = "/api/tabs";
 
 export default function MainTabEditor() {
   const { tabId } = useParams();
-  const { updateTab } = useContext(TablabContext);
-
-  useEffect(() => {
-    const storedTabs = JSON.parse(localStorage.getItem("allTabs"));
-    if (storedTabs && storedTabs.length > 0) {
-      // Find the tab that matches the tabId
-      const selectedTab = storedTabs.find((tab) => tab.id === tabId);
-      setTabData(selectedTab || null);
-      setTab(selectedTab.tab || null);
-    }
-  }, [tabId]);
-
-  // CONSTANTS (FOR TESTING)
+  const { auth } = useAuth();
 
   // STATES
 
-  const [tabData, setTabData] = useState({});
-  const isLoading = Object.keys(tabData).length === 0;
-  const [tab, setTab] = useState(tabData.tab);
+  // const [tabData, setTabData] = useState({});
+  const [tab, setTab] = useState([]);
+  const [details, setDetails] = useState({});
+  const isLoading = Object.keys(tab).length === 0;
   const [position, setPosition] = useState({ measure: 0, frame: 0 });
   const [editorIsOpen, setEditorIsOpen] = useState(false);
+  console.log("main:");
+  console.log(tab);
+
+  function updateDetails(name, value) {
+    console.log(name);
+    setDetails((prevTab) => ({ ...prevTab, [name]: value }));
+  }
 
   // HOOKS
 
   useEffect(() => {
-    updateTab(tabId, tab);
-  }, [tab]);
+    let isMounted = true;
+    const controller = new AbortController();
+
+    const getTab = async () => {
+      try {
+        const URL = TAB_URL + "/" + tabId;
+        const response = await axios.get(URL, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: auth.accessToken,
+          },
+        });
+        console.log("test data");
+        const data = response.data[0];
+        const details = {
+          id: data.id,
+          artist: data.tab_artist,
+          song: data.tab_name,
+          tuning: data.tuning,
+        };
+        const tabData = data.tab;
+        setDetails(details);
+        setTab(tabData);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    getTab();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, []);
+
+  /*
 
   // FUNCTIONS
 
@@ -230,13 +264,15 @@ export default function MainTabEditor() {
       <Header />
       <PageWrapper>
         {!isLoading && (
-          <TabContext.Provider value={tabData}>
+          <TabContext.Provider value={tab}>
             <main className="mx-auto h-full">
               <div className="editor-top h-full">
-                <TabDetails />
+                <TabDetails details={details} updateDetails={updateDetails} />
               </div>
-              <Editor
-                tab={tab}
+
+              {/* 
+                <Editor
+                tab={tab.tab}
                 position={position}
                 editorIsOpen={editorIsOpen}
                 addNewFrame={addNewFrame}
@@ -255,8 +291,10 @@ export default function MainTabEditor() {
                 updatePosition={updatePosition}
                 addNewFrame={addNewFrame}
                 addNewMeasure={addNewMeasure}
-                tuning={tabData.details.tuning}
+                tuning={tab.tuning}
               />
+                
+                */}
             </main>
           </TabContext.Provider>
         )}
