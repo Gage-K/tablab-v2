@@ -47,7 +47,6 @@ export default function Login() {
       );
 
       const accessToken = response.data.token;
-      console.log(accessToken);
       setAuth({ user, pwd, accessToken });
       navigate(from, { replace: true });
     } catch (err) {
