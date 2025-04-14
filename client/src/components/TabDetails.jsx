@@ -30,11 +30,6 @@ const strings = [1, 2, 3, 4, 5, 6];
 
 export default function TabDetails({ details, updateDetails }) {
   const [isShown, setIsShown] = useState(false);
-  // const { id } = useContext(TabContext);
-  // const { tabs, updateDetails } = useContext(TablabContext);
-  // const currentTab = tabs.find((tab) => tab.id === id);
-  console.log("details:");
-  console.log(details);
 
   function handleTuning(event, string, value) {
     const newTuning = details.tuning.map((note, index) =>
