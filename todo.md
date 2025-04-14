@@ -1,11 +1,22 @@
 # To Do
 
-## Features
+## Back End
+
+- [ ] Remove test code
+- [ ] Add more thorough try catch blocks
+
+### Bugs
+
+- [ ] usersController bug: deleting user has an issue with deserializing user—likely need some way to handle logging out.
+
+## Front End
 
 ### Priority 1
 
 - [ ] Note & chord finder
 - [ ] Dark mode
+- [ ] Abstract functions in tab editor to separate modules for better readability
+- [ ] Create better organization within components folder for UI and App components
 
 ### Priority 2
 
