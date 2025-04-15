@@ -27,8 +27,14 @@ async function updateTab(req, res) {
   }
 
   const { tabName, tabArtist, tuning, tab } = req.body;
-  const newId = await db.updateTabData(tabId, tabName, tabArtist, tuning, tab);
-  res.json(newId);
+  const newId = await db.updateTabData(
+    tabId,
+    tabName,
+    tabArtist,
+    JSON.stringify(tuning),
+    JSON.stringify(tab)
+  );
+  res.status(201).json({ message: "Tab updated successfully", id: newId });
 }
 
 async function deleteTab(req, res) {
