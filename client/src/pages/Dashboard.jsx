@@ -49,7 +49,7 @@ const DEFAULT_TAB = {
 };
 
 export default function Dashboard() {
-  const { tabs, createNewTab, deleteTab } = useContext(TablabContext);
+  const { tabs, createNewTab } = useContext(TablabContext);
   const detailStyle = "p-3 border-t border-neutral-300 truncate";
   const buttonStyle =
     "w-full max-w-16 py-2 flex justify-center text-xs flex-none border border-transparent  rounded font-semibold hover:shadow-sm duration-150 ease-in-out";
@@ -59,23 +59,23 @@ export default function Dashboard() {
 
   const [allTabs, setAllTabs] = useState([]);
 
+  async function getTabs() {
+    try {
+      const response = await axios.get(TABS_URL, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth.accessToken,
+        },
+      });
+      setAllTabs(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   useEffect(() => {
     let isMounted = true;
     const controller = new AbortController();
-
-    const getTabs = async () => {
-      try {
-        const response = await axios.get(TABS_URL, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: auth.accessToken,
-          },
-        });
-        setAllTabs(response.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
 
     getTabs();
 
@@ -98,6 +98,23 @@ export default function Dashboard() {
         const tabId = response.data.tabId;
         navigate(`/editor/${tabId}`, { tabId: tabId });
       }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function deleteTab(id) {
+    try {
+      const URL = TABS_URL + "/" + id;
+      const response = await axios.delete(URL, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth.accessToken,
+        },
+        withCredentials: true,
+      });
+      console.log(response.data.message);
+      getTabs();
     } catch (err) {
       console.error(err);
     }
