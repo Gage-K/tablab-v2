@@ -1,5 +1,5 @@
 // REACT IMPORTS
-import { useState, createContext, useEffect, useContext } from "react";
+import { useState, createContext, useEffect, useContext, useRef } from "react";
 import { nanoid } from "nanoid";
 import { useParams } from "react-router";
 
@@ -17,6 +17,7 @@ import axios from "../api/axios";
 // DATA IMPORTS
 import { TablabContext } from "../layouts/TablabContextLayout";
 import PageWrapper from "../layouts/PageWrapper";
+import { Check, FloppyDisk } from "@phosphor-icons/react";
 
 const TabContext = createContext();
 const TAB_URL = "/api/tabs";
@@ -24,6 +25,7 @@ const TAB_URL = "/api/tabs";
 export default function MainTabEditor() {
   const { tabId } = useParams();
   const { auth } = useAuth();
+  const hasMounted = useRef(false);
 
   // STATES
 
@@ -33,9 +35,12 @@ export default function MainTabEditor() {
   const isLoading = Object.keys(tab).length === 0;
   const [position, setPosition] = useState({ measure: 0, frame: 0 });
   const [editorIsOpen, setEditorIsOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  console.log(details);
 
   function updateDetails(name, value) {
     setDetails((prevTab) => ({ ...prevTab, [name]: value }));
+    setIsEditing(true);
   }
 
   // HOOKS
@@ -77,6 +82,34 @@ export default function MainTabEditor() {
   }, []);
 
   // FUNCTIONS
+
+  async function saveChanges() {
+    console.log("saving changes");
+    const data = {
+      tabId: details.id,
+      tabName: details.song,
+      tabArtist: details.artist,
+      tuning: details.tuning,
+      tab: tab,
+    };
+
+    try {
+      const URL = TAB_URL + "/" + tabId;
+      const response = await axios.put(URL, data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: auth.accessToken,
+        },
+        withCredentials: true,
+      });
+      console.log(response);
+    } catch (err) {
+      console.error(err);
+    }
+
+    console.log(data);
+    setIsEditing(false);
+  }
 
   function handleOpeningEditor() {
     setEditorIsOpen((prev) => !prev);
@@ -174,6 +207,8 @@ export default function MainTabEditor() {
 
     setTab(updatedTab);
     measure === -1 ? updatePosition(0, 0) : updatePosition(measure, 0);
+
+    setIsEditing(true);
   }
 
   function addNewFrame(measure, frame, isEmptyTab) {
@@ -199,6 +234,8 @@ export default function MainTabEditor() {
     setTab(updatedTab);
 
     updatePosition(measure, frame + 1);
+
+    setIsEditing(true);
   }
 
   function deleteMeasure(measure) {
@@ -208,6 +245,7 @@ export default function MainTabEditor() {
     }
     setTab((prev) => prev.filter((prevMeasure, index) => index != measure));
     updatePosition(measure - 1, tab[measure - 1]?.length - 1);
+    setIsEditing(true);
   }
 
   function deleteFrame(frame, measure) {
@@ -238,6 +276,8 @@ export default function MainTabEditor() {
       : isExistingPosition(measure + 1, 0)
       ? updatePosition(measure + 1, 0)
       : updatePosition(measure, frame - 1);
+
+    setIsEditing(true);
   }
 
   function updateTabData(measure, index, formData) {
@@ -251,6 +291,7 @@ export default function MainTabEditor() {
         )
       )
     );
+    setIsEditing(true);
   }
 
   return (
@@ -260,6 +301,23 @@ export default function MainTabEditor() {
         {!isLoading && (
           <TabContext.Provider value={tab}>
             <main className="mx-auto h-full">
+              <button
+                className={
+                  isEditing
+                    ? "flex items-center gap-2 border border-yellow-500 rounded-sm px-2 bg-yellow-100 text-yellow-800"
+                    : "flex items-center gap-2 border border-green-500 rounded-sm px-2 bg-green-100 text-green-800"
+                }
+                onClick={saveChanges}>
+                {isEditing ? (
+                  <>
+                    <FloppyDisk size={12} /> Save changes
+                  </>
+                ) : (
+                  <>
+                    <Check size={12} /> Up to date
+                  </>
+                )}
+              </button>
               <div className="editor-top h-full">
                 <TabDetails details={details} updateDetails={updateDetails} />
               </div>
