@@ -3,7 +3,7 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import Header from "../components/Header";
 import PageWrapper from "../layouts/PageWrapper";
 import Footer from "../components/Footer";
-import { Link } from "react-router";
+import { Link, redirect, useNavigate, useLocation } from "react-router";
 import axios from "../api/axios";
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
@@ -13,6 +13,9 @@ const REGISTER_URL = "/api/register";
 export default function Register() {
   const userRef = useRef();
   const errRef = useRef();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
 
   const [user, setUser] = useState("");
   const [validName, setValidName] = useState(false);
@@ -72,7 +75,7 @@ export default function Register() {
           },
         }
       );
-      setSuccess(true);
+      navigate(from, { replace: true });
     } catch (err) {
       if (!err?.response) {
         setErrMsg("No server response");
@@ -89,140 +92,178 @@ export default function Register() {
     <Fragment>
       <Header />
       <PageWrapper>
-        <main className="min-h-full">
+        <main className="min-h-screen flex justify-center py-16">
           <section>
-            <p
-              ref={errRef}
-              className={errMsg ? "errmsg" : "offscreen"}
-              aria-live="assertive">
-              {errMsg}
-            </p>
-            <h1>Register</h1>
-            <form onSubmit={handleSubmit}>
-              <div>
-                <label htmlFor="username" className="flex">
-                  Username
-                  <Check size={16} className={validName ? "valid" : "hidden"} />
-                  <X
-                    size={16}
-                    className={validName || !user ? "hidden" : "invalid"}
-                  />
-                </label>
-                <input
-                  type="text"
-                  id="username"
-                  className="border border-neutral-400"
-                  ref={userRef}
-                  autoComplete="off"
-                  onChange={(e) => setUser(e.target.value)}
-                  required
-                  aria-invalid={validName ? "false" : "true"}
-                  aria-describedby="uidnote"
-                  onFocus={() => setUserFocus(true)}
-                  onBlur={() => setUserFocus(false)}
-                />
-
-                <p
-                  id="uidnote"
-                  className={
-                    userFocus && user && !validName ? "instructions" : "hidden"
-                  }>
-                  <Info size={16} />
-                  4 to 24 characters.
-                  <br />
-                  Must begin with a letter.
-                  <br />
-                  Letters, numbers, underscores, hyphens allowed.
-                </p>
-              </div>
-
-              <div>
-                <label htmlFor="password" className="flex">
-                  Password:
-                  <Check size={16} className={validPwd ? "valid" : "hidden"} />
-                  <X
-                    size={16}
-                    className={validPwd || !pwd ? "hidden" : "invalid"}
-                  />
-                </label>
-                <input
-                  type="password"
-                  className="border border-neutral-400"
-                  id="password"
-                  onChange={(e) => setPwd(e.target.value)}
-                  value={pwd}
-                  required
-                  aria-invalid={validPwd ? "false" : "true"}
-                  aria-describedby="pwdnote"
-                  onFocus={() => setPwdFocus(true)}
-                  onBlur={() => setPwdFocus(false)}
-                />
-                <p
-                  id="pwdnote"
-                  className={pwdFocus && !validPwd ? "instructions" : "hidden"}>
-                  <Info size={16} />
-                  8 to 24 characters.
-                  <br />
-                  Must include uppercase and lowercase letters, a number and a
-                  special character.
-                  <br />
-                  Allowed special characters:{" "}
-                  <span aria-label="exclamation mark">!</span>{" "}
-                  <span aria-label="at symbol">@</span>{" "}
-                  <span aria-label="hashtag">#</span>{" "}
-                  <span aria-label="dollar sign">$</span>{" "}
-                  <span aria-label="percent">%</span>
-                </p>
-              </div>
-
-              <div>
-                <label htmlFor="confirm_pwd" className="flex">
-                  Confirm Password:
-                  <Check
-                    size={16}
-                    className={validMatch && matchPwd ? "valid" : "hidden"}
-                  />
-                  <X
-                    size={16}
-                    className={validMatch || !matchPwd ? "hidden" : "invalid"}
-                  />
-                </label>
-                <input
-                  type="password"
-                  className="border border-neutral-400"
-                  id="confirm_pwd"
-                  onChange={(e) => setMatchPwd(e.target.value)}
-                  value={matchPwd}
-                  required
-                  aria-invalid={validMatch ? "false" : "true"}
-                  aria-describedby="confirmnote"
-                  onFocus={() => setMatchFocus(true)}
-                  onBlur={() => setMatchFocus(false)}
-                />
-                <p
-                  id="confirmnote"
-                  className={
-                    matchFocus && !validMatch ? "instructions" : "hidden"
-                  }>
-                  <Info size={16} />
-                  Must match the first password input field.
-                </p>
-              </div>
-
-              <button
+            <div className="bg-neutral-50 p-8 rounded-sm shadow-md border border-neutral-200">
+              <h1 className="text-2xl font-bold mb-4">Register</h1>
+              <p
+                ref={errRef}
                 className={
-                  !validName || !validPwd || !validMatch
-                    ? "bg-neutral-400 rounded-sm text-neutral-50 p-2"
-                    : "bg-neutral-800 rounded-sm text-neutral-50 p-2"
+                  errMsg
+                    ? "flex border border-red-600 bg-red-50 text-red-600 px-2 py-1 mb-2 rounded-sm"
+                    : "hidden"
                 }
-                disabled={
-                  !validName || !validPwd || !validMatch ? true : false
-                }>
-                Sign up
-              </button>
-            </form>
-            <p>Already registered?</p>
-            <Link to="/login">Log in</Link>
+                aria-live="assertive">
+                {errMsg}
+              </p>
+              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                <div>
+                  <label htmlFor="username" className="flex items-center gap-2">
+                    Username
+                    <Check
+                      size={16}
+                      className={
+                        validName ? "valid text-emerald-600" : "hidden"
+                      }
+                    />
+                    <X
+                      size={16}
+                      className={
+                        validName || !user ? "hidden" : "invalid text-red-600"
+                      }
+                    />
+                  </label>
+                  <input
+                    type="text"
+                    id="username"
+                    className="border border-neutral-300 rounded-sm px-2 py-1"
+                    ref={userRef}
+                    autoComplete="off"
+                    onChange={(e) => setUser(e.target.value)}
+                    required
+                    aria-invalid={validName ? "false" : "true"}
+                    aria-describedby="uidnote"
+                    onFocus={() => setUserFocus(true)}
+                    onBlur={() => setUserFocus(false)}
+                  />
+                  <div className="max-w-58 text-sm text-neutral-600 mt-2">
+                    <p
+                      id="uidnote"
+                      className={
+                        userFocus && user && !validName
+                          ? "instructions"
+                          : "hidden"
+                      }>
+                      4 to 24 characters.
+                      <br />
+                      Must begin with a letter.
+                      <br />
+                      Letters, numbers, underscores, hyphens allowed.
+                    </p>
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="password" className="flex items-center">
+                    Password:
+                    <Check
+                      size={16}
+                      className={validPwd ? "valid text-emerald-600" : "hidden"}
+                    />
+                    <X
+                      size={16}
+                      className={
+                        validPwd || !pwd ? "hidden" : "invalid text-red-600"
+                      }
+                    />
+                  </label>
+                  <input
+                    type="password"
+                    className="border border-neutral-300 rounded-sm px-2 py-1"
+                    id="password"
+                    onChange={(e) => setPwd(e.target.value)}
+                    value={pwd}
+                    required
+                    aria-invalid={validPwd ? "false" : "true"}
+                    aria-describedby="pwdnote"
+                    onFocus={() => setPwdFocus(true)}
+                    onBlur={() => setPwdFocus(false)}
+                  />
+                  <div className="max-w-58 text-sm text-neutral-600 mt-2">
+                    <p
+                      id="pwdnote"
+                      className={
+                        pwdFocus && !validPwd ? "instructions" : "hidden"
+                      }>
+                      8 to 24 characters.
+                      <br />
+                      Must include uppercase and lowercase letters, a number and
+                      a special character.
+                      <br />
+                      Allowed special characters:{" "}
+                      <span aria-label="exclamation mark">!</span>{" "}
+                      <span aria-label="at symbol">@</span>{" "}
+                      <span aria-label="hashtag">#</span>{" "}
+                      <span aria-label="dollar sign">$</span>{" "}
+                      <span aria-label="percent">%</span>
+                    </p>
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="confirm_pwd" className="flex">
+                    Confirm Password:
+                    <Check
+                      size={16}
+                      className={
+                        validMatch && matchPwd
+                          ? "valid text-emerald-600"
+                          : "hidden"
+                      }
+                    />
+                    <X
+                      size={16}
+                      className={
+                        validMatch || !matchPwd
+                          ? "hidden"
+                          : "invalid text-red-600"
+                      }
+                    />
+                  </label>
+                  <input
+                    type="password"
+                    className="border border-neutral-300 rounded-sm px-2 py-1"
+                    id="confirm_pwd"
+                    onChange={(e) => setMatchPwd(e.target.value)}
+                    value={matchPwd}
+                    required
+                    aria-invalid={validMatch ? "false" : "true"}
+                    aria-describedby="confirmnote"
+                    onFocus={() => setMatchFocus(true)}
+                    onBlur={() => setMatchFocus(false)}
+                  />
+                  <div className="max-w-58 text-sm text-neutral-600 mt-2">
+                    <p
+                      id="confirmnote"
+                      className={
+                        matchFocus && !validMatch ? "instructions" : "hidden"
+                      }>
+                      Must match the first password input field.
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  className={
+                    !validName || !validPwd || !validMatch
+                      ? "bg-neutral-200 rounded-sm py-2 text-neutral-500 hover:cursor-not-allowed"
+                      : "bg-neutral-800 rounded-sm py-2 text-neutral-50 hover:bg-neutral-600 cursor-pointer"
+                  }
+                  disabled={
+                    !validName || !validPwd || !validMatch ? true : false
+                  }>
+                  Sign up
+                </button>
+              </form>
+              <p className="my-2 text-md text-neutral-700">
+                Already registered?{" "}
+                <Link
+                  to="/login"
+                  className="font-medium underline hover:text-neutral-500">
+                  Log in
+                </Link>
+              </p>
+            </div>
           </section>
         </main>
       </PageWrapper>
