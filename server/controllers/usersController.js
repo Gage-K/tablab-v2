@@ -51,10 +51,10 @@ async function insertUser(req, res) {
   const usernameData = await db.getUserByUsername(username);
 
   if (emailData[0]) {
-    return Error(`User with email of ${email} already exists.`);
+    return Error(`Email is already in use.`);
   }
   if (usernameData[0]) {
-    return Error(`User with email of ${username} already exists.`);
+    return Error(`Username is taken.`);
   }
 
   // then if no credentials already exist, create new user
