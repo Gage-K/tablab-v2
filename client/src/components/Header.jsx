@@ -1,10 +1,15 @@
-import { Link, NavLink } from "react-router";
+import { Link, NavLink, redirect } from "react-router";
 import PageWrapper from "../layouts/PageWrapper";
 import useAuth from "../hooks/useAuth";
 import { Circle } from "@phosphor-icons/react";
 
 export default function Header() {
-  const { auth } = useAuth();
+  const { auth, setAuth } = useAuth();
+
+  function logout() {
+    setAuth({});
+    redirect("/");
+  }
   const linkBaseStyle =
     "bg-neutral-100/0 rounded-sm px-3 py-1 hover:bg-neutral-100 hover:text-neutral-900 duration-150 ease-in-out";
   const activeStyle = `${linkBaseStyle} text-neutral-900 bg-neutral-100/100`;
@@ -47,7 +52,7 @@ export default function Header() {
           </nav>
           {auth.user ? (
             <>
-              <Link to="/logout">Log out</Link>
+              <button onClick={logout}>Log out</button>
               <Link to="/profile">
                 <span className="hidden">Profile</span>
                 <Circle size={16} />
