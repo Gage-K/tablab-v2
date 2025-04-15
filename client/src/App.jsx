@@ -25,7 +25,6 @@ function App() {
           {/* Static Public Pages */}
           <Route path="/" element={<Home />} />
           <Route path="/updates" element={<Updates />} />
-          <Route path="/guide" element={<Guide />} />
 
           {/* Authentication Pages */}
           <Route path="/login" element={<Login />} />
