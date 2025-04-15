@@ -23,6 +23,11 @@ export default function Login() {
   const [pwd, setPwd] = useState("");
   const [errMsg, setErrMsg] = useState("");
 
+  const isFilled = user && pwd;
+
+  console.log("error");
+  console.log(errMsg);
+
   useEffect(() => {
     userRef.current.focus();
   }, []);
@@ -55,7 +60,7 @@ export default function Login() {
       } else if (err.response?.status === 400) {
         setErrMsg("Missing username or password");
       } else if (err.response?.status === 401) {
-        setErrMsg("Unauthorized");
+        setErrMsg("Incorrect login details");
       } else {
         setErrMsg("Login failed");
       }
@@ -63,57 +68,74 @@ export default function Login() {
 
       console.error(err);
     }
-
-    setUser("");
-    setPwd("");
   }
 
   return (
     <Fragment>
       <Header />
       <PageWrapper>
-        <main className="min-h-screen">
+        <main className="min-h-screen flex justify-center py-16">
           <section>
-            <p
-              ref={errRef}
-              className={errMsg ? "errmsg" : "hidden"}
-              aria-live="assertive">
-              {errMsg}
-            </p>
-            <h1>Log in</h1>
-            <form onSubmit={handleSubmit}>
-              <div>
-                <label htmlFor="username" className="flex">
-                  Username:
-                </label>
-                <input
-                  type="text"
-                  className="border border-neutral-400"
-                  id="username"
-                  ref={userRef}
-                  autoComplete="off"
-                  onChange={(e) => setUser(e.target.value)}
-                  value={user}
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="password" className="flex">
-                  Password:
-                </label>
-                <input
-                  type="password"
-                  className="border border-neutral-400"
-                  id="password"
-                  onChange={(e) => setPwd(e.target.value)}
-                  value={pwd}
-                  required
-                />
-              </div>
-              <button>Sign in</button>
-            </form>
-            <p>Don't have an account?</p>
-            <Link to="/register">Sign up</Link>
+            <div className="bg-neutral-50 p-8 rounded-sm shadow-md border border-neutral-200">
+              <h1 className="text-2xl font-bold mb-4">Log in</h1>
+              <p
+                ref={errRef}
+                className={
+                  errMsg
+                    ? "flex border border-red-600 bg-red-50 text-red-600 px-2 py-1 rounded-sm"
+                    : "hidden"
+                }
+                aria-live="assertive">
+                {errMsg}
+              </p>
+              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                <div>
+                  <label htmlFor="username" className="flex">
+                    Username:
+                  </label>
+                  <input
+                    type="text"
+                    className="border border-neutral-300 rounded-sm px-2 py-1"
+                    id="username"
+                    ref={userRef}
+                    autoComplete="off"
+                    onChange={(e) => setUser(e.target.value)}
+                    value={user}
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="password" className="flex">
+                    Password:
+                  </label>
+                  <input
+                    type="password"
+                    className="border border-neutral-300 rounded-sm px-2 py-1"
+                    id="password"
+                    onChange={(e) => setPwd(e.target.value)}
+                    value={pwd}
+                    required
+                  />
+                </div>
+                <button
+                  disabled={!isFilled}
+                  className={
+                    isFilled
+                      ? "bg-neutral-800 rounded-sm py-2 text-neutral-50 hover:bg-neutral-600 cursor-pointer"
+                      : "bg-neutral-200 rounded-sm py-2 text-neutral-500 hover:cursor-not-allowed"
+                  }>
+                  Sign in
+                </button>
+              </form>
+              <p className="my-2 text-md text-neutral-700">
+                Don't have an account?{" "}
+                <Link
+                  to="/register"
+                  className="font-medium underline hover:text-neutral-500">
+                  Sign up
+                </Link>
+              </p>
+            </div>
           </section>
         </main>
       </PageWrapper>
