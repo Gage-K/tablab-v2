@@ -36,13 +36,6 @@ export default function Header() {
               tabs
             </NavLink>
             <NavLink
-              to="/guide"
-              className={(isActive) =>
-                isActive.isActive ? activeStyle : linkBaseStyle
-              }>
-              guide
-            </NavLink>
-            <NavLink
               to="/updates"
               className={(isActive) =>
                 isActive.isActive ? activeStyle : linkBaseStyle
@@ -50,20 +43,24 @@ export default function Header() {
               updates
             </NavLink>
           </nav>
-          {auth.user ? (
-            <>
-              <button onClick={logout}>Log out</button>
-              <Link to="/profile">
-                <span className="hidden">Profile</span>
-                <Circle size={16} />
-              </Link>
-            </>
-          ) : (
-            <>
-              <Link to="/login">Log in</Link>{" "}
-              <Link to="/register">Register</Link>
-            </>
-          )}
+          <div className="flex gap-2 text-neutral-500 text-sm font-medium">
+            {auth.user ? (
+              <>
+                <button onClick={logout} className="text-sm">
+                  Log out
+                </button>
+                <Link to="/profile">
+                  <span className="hidden">Profile</span>
+                  <Circle size={32} />
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link to="/login">Log in</Link>{" "}
+                <Link to="/register">Register</Link>
+              </>
+            )}
+          </div>
         </div>
       </PageWrapper>
     </header>
