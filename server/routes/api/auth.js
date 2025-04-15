@@ -25,6 +25,8 @@ router.post("/login", async (req, res, next) => {
     if (isValid) {
       const tokenObject = utils.issueJWT(user);
 
+      db.updateUserLastLogin(user.id);
+
       res.status(200).json({
         success: true,
         user: user,
