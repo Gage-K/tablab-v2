@@ -301,23 +301,6 @@ export default function MainTabEditor() {
         {!isLoading && (
           <TabContext.Provider value={tab}>
             <main className="mx-auto h-full">
-              <button
-                className={
-                  isEditing
-                    ? "flex items-center gap-2 border border-yellow-500 rounded-sm px-2 bg-yellow-100 text-yellow-800"
-                    : "flex items-center gap-2 border border-green-500 rounded-sm px-2 bg-green-100 text-green-800"
-                }
-                onClick={saveChanges}>
-                {isEditing ? (
-                  <>
-                    <FloppyDisk size={12} /> Save changes
-                  </>
-                ) : (
-                  <>
-                    <Check size={12} /> Up to date
-                  </>
-                )}
-              </button>
               <div className="editor-top h-full">
                 <TabDetails details={details} updateDetails={updateDetails} />
               </div>
@@ -335,6 +318,8 @@ export default function MainTabEditor() {
                   handleOpeningEditor={handleOpeningEditor}
                   updatePosition={updatePosition}
                   updateTabData={updateTabData}
+                  isEditing={isEditing}
+                  saveChanges={saveChanges}
                 />
               }
 
