@@ -33,7 +33,7 @@ export default function TabDisplay({
     return interpretedNote;
   }
 
-  // removes tab nesting and creates one continuous tab array
+  // Removes tab nesting in JSON/Object and creates one continuous tab array
   const flattenedTab = tab.flatMap((measure, measureIndex) =>
     measure.map((frame, frameIndex) => ({
       frame,
