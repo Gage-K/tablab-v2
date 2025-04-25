@@ -1,13 +1,7 @@
-import { useState, useContext } from "react";
-
-import { TabContext } from "./MainTabEditor";
-
+import { useState } from "react";
 import PropTypes from "prop-types";
 
-import {} from "@phosphor-icons/react";
-import { TablabContext } from "../layouts/TablabContextLayout";
-
-const notes = [
+const NOTES = [
   "Ab",
   "A",
   "A#",
@@ -26,7 +20,7 @@ const notes = [
   "G",
   "G#",
 ];
-const strings = [1, 2, 3, 4, 5, 6];
+const STRINGS = [1, 2, 3, 4, 5, 6];
 
 export default function TabDetails({ details, updateDetails }) {
   const [isShown, setIsShown] = useState(false);
@@ -93,7 +87,7 @@ export default function TabDetails({ details, updateDetails }) {
               Tuning
             </legend>
             <div className="grid grid-cols-6 text-sm">
-              {strings.toReversed().map((string) => (
+              {STRINGS.toReversed().map((string) => (
                 <div
                   key={string}
                   className="px-2 py-2 border-r last:border-none border-neutral-300 flex flex-col gap-1">
@@ -109,7 +103,7 @@ export default function TabDetails({ details, updateDetails }) {
                       handleTuning(event, string - 1, event.target.value)
                     }
                     className="bg-neutral-100 p-1 rounded">
-                    {notes.map((note) => (
+                    {NOTES.map((note) => (
                       <option value={note} key={note}>
                         {note}
                       </option>
