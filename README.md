@@ -1,6 +1,6 @@
 # tablab
 
-Tablab is a full-stack web application for creating guitar tablature. Tablab relies on React (with TailwindCSS) in the frontend and Node.js, Express, and PostgreSQL in the backend.
+Tablab is a full-stack web application for creating guitar tablature. Tablab relies on React (with TailwindCSS) in the frontend and Node.js, Express, and PostgreSQL in the backend. Authentication is handled via JSON Web Tokens (via HTTP cookies) with Passport.
 
 ## Features
 
