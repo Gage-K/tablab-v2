@@ -1,8 +1,7 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import PageWrapper from "../layouts/PageWrapper";
-import { Fragment, useEffect, useState, useRef, useContext } from "react";
-import AuthContext from "../context/authProvider";
+import { Fragment, useEffect, useState, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router";
 import axios from "../api/axios";
 import useAuth from "../hooks/useAuth";
