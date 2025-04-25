@@ -6,7 +6,6 @@ import axios from "../api/axios";
 import useAuth from "../hooks/useAuth";
 
 const USER_URL = "/api/user";
-const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
 export default function Profile() {
   const { auth } = useAuth();
