@@ -94,7 +94,6 @@ async function updateUserEmail(id, newEmail) {
 
 async function updateUserLastLogin(id) {
   const values = [id, new Date()];
-  console.log(values);
   try {
     await pool.query(`UPDATE users SET last_login=$2 WHERE id=$1`, values);
   } catch (err) {
@@ -212,7 +211,6 @@ async function updateTabData(id, tabName, tabArtist, tuning, tab) {
      WHERE id = $6`,
     values
   );
-  console.log(`tab updated.`);
 }
 
 async function updateTabName(id, name) {
@@ -223,7 +221,6 @@ async function updateTabName(id, name) {
     return;
   }
   await pool.query(`UPDATE tabs SET tab_name=$2 WHERE id=$1`, values);
-  console.log(`Name of tab with id of ${id} updated`);
 }
 
 async function updateTabArtist(id, artist) {
@@ -234,7 +231,6 @@ async function updateTabArtist(id, artist) {
     return;
   }
   await pool.query(`UPDATE tabs SET artist=$2 WHERE id=$1`, values);
-  console.log(`Artist of tab with id of ${id} updated`);
 }
 
 async function updateTuning(id, tuning) {
@@ -245,7 +241,6 @@ async function updateTuning(id, tuning) {
     return;
   }
   await pool.query(`UPDATE tabs SET tuning=$2 WHERE id=$1`, values);
-  console.log(`Tuning of tab with id of ${id} updated`);
 }
 
 async function updateTab(id, tab) {
@@ -256,7 +251,6 @@ async function updateTab(id, tab) {
     return;
   }
   await pool.query(`UPDATE tabs SET tab=$2 WHERE id=$1`, values);
-  console.log(`Tablature with id of ${id} updated`);
 }
 
 // TAB DELETE FUNCTIONS
@@ -269,7 +263,6 @@ async function deleteTab(id) {
     return;
   }
   await pool.query(`DELETE FROM tabs WHERE id=$1`, values);
-  console.log(`Tab with id of ${id} deleted`);
 }
 
 module.exports = {

@@ -14,7 +14,6 @@ async function getTab(req, res) {
     return res.status(403).json({ message: "You do not have access." });
   }
   const tab = await db.getTabById(tabId);
-  console.log(tab);
   res.json(tab);
 }
 
@@ -50,10 +49,8 @@ async function deleteTab(req, res) {
 
 async function createTab(req, res) {
   const { tabName, tabArtist, tuning, tab } = req.body;
-  console.log(req.body);
   const processedTuning = JSON.stringify(tuning);
   const processedTab = JSON.stringify(tab);
-  console.log(processedTab);
 
   const currentUser = req?.user.id;
   const tabId = await db.insertTab(

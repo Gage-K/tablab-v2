@@ -25,9 +25,6 @@ export default function Login() {
 
   const isFilled = user && pwd;
 
-  console.log("error");
-  console.log(errMsg);
-
   useEffect(() => {
     userRef.current.focus();
   }, []);

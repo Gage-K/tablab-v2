@@ -113,7 +113,6 @@ export default function Dashboard() {
         },
         withCredentials: true,
       });
-      console.log(response.data.message);
       getTabs();
     } catch (err) {
       console.error(err);

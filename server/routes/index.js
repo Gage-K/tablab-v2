@@ -13,7 +13,6 @@ router.get("/tabs", async (req, res) => {
       res.redirect("/login");
     } else {
       const tabs = await db.getTabsByUser(user.id);
-      console.log(tabs);
       res.json(tabs);
       res.status(201);
     }

@@ -36,7 +36,6 @@ export default function MainTabEditor() {
   const [position, setPosition] = useState({ measure: 0, frame: 0 });
   const [editorIsOpen, setEditorIsOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  console.log(details);
 
   function updateDetails(name, value) {
     setDetails((prevTab) => ({ ...prevTab, [name]: value }));
@@ -84,7 +83,6 @@ export default function MainTabEditor() {
   // FUNCTIONS
 
   async function saveChanges() {
-    console.log("saving changes");
     const data = {
       tabId: details.id,
       tabName: details.song,
@@ -102,12 +100,10 @@ export default function MainTabEditor() {
         },
         withCredentials: true,
       });
-      console.log(response);
     } catch (err) {
       console.error(err);
     }
 
-    console.log(data);
     setIsEditing(false);
   }
 
