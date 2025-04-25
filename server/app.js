@@ -10,13 +10,19 @@ const session = require("express-session");
 const passport = require("passport");
 const cors = require("cors");
 
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "ejs");
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
-app.use(session({ secret: "secret", resave: false, saveUninitialized: false }));
+// Makes app.js aware of passport configuration
+require("./config/passport")(passport);
 
-require("./config/passport")(passport); // lets app.js know about passport configuration
-app.use(passport.initialize()); // everytime route reloads, it checks if user property is not null
+// Checks if `user` property is null on every route
+app.use(passport.initialize());
 app.use(passport.session());
 app.use(passport.authenticate("session"));
 
