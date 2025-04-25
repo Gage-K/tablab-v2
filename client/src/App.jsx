@@ -7,10 +7,8 @@ import "./App.css";
 import MainTabEditor from "./components/MainTabEditor";
 import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
-import TablabContextLayout from "./layouts/TablabContextLayout";
 import NotFound from "./pages/NotFound";
 import Updates from "./pages/Updates";
-import Guide from "./pages/Guide";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
@@ -33,14 +31,12 @@ function App() {
           {/* Protected Pages */}
           <Route element={<RequireAuth />}>
             <Route path="/profile" element={<Profile />} />
-            <Route element={<TablabContextLayout />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/editor/:tabId" element={<MainTabEditor />} />
-              <Route
-                path="/editor/*"
-                element={<Navigate to="/notfound" replace />}
-              />
-            </Route>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/editor/:tabId" element={<MainTabEditor />} />
+            <Route
+              path="/editor/*"
+              element={<Navigate to="/notfound" replace />}
+            />
           </Route>
 
           {/* Catch All Pages */}
