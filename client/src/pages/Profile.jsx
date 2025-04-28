@@ -4,8 +4,10 @@ import PageWrapper from "../layouts/PageWrapper";
 import Footer from "../components/Footer";
 import axios from "../api/axios";
 import useAuth from "../hooks/useAuth";
+import { Link } from "react-router";
 
 const USER_URL = "/api/user";
+const LOGOUT_URL = "/api/logout";
 
 export default function Profile() {
   const { auth } = useAuth();
@@ -87,29 +89,23 @@ export default function Profile() {
             <p>Loading...</p>
           ) : (
             <>
-              <div className="p-8 bg-indigo-50 border border-indigo-300 shadow-xs rounded-lg">
+              <div>
                 <h1 className="text-2xl font-bold">Profile</h1>
                 <p>
                   Profile information will only be displayed on your dashboard.
                 </p>
-                <section>
-                  <form onSubmit={handleEmailSubmission}>
-                    <label>Username</label>
-                    <input value={user?.username} disabled />
-                    <label>Email</label>
-                    <input value={email} onChange={handleEmailChange} />
-                    <button disabled={!isEditing}>Update email</button>
-                  </form>
-                </section>
                 <hr />
-                <p>Username</p>
-                <p>{user?.username}</p>
+                <div class="flex gap-4">
+                  <p>Username</p>
+                  <p>{user?.username}</p>
+                </div>
 
-                <p>Email</p>
-                <p>{user?.email}</p>
-
-                <p>Account created at {user?.created_at?.substring(0, 10)}</p>
-                <p>Last logged in on {user?.last_login?.substring(0, 10)}</p>
+                <p class="color-neutral-400">
+                  Account created at {user?.created_at?.substring(0, 10)}
+                </p>
+                <p class="color-neutral-400">
+                  Last logged in on {user?.last_login?.substring(0, 10)}
+                </p>
               </div>
             </>
           )}
