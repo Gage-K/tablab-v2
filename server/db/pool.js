@@ -6,6 +6,7 @@ module.exports =
     ? new Pool({
         connectionString: process.env.DB_URL,
         ssl: { rejectUnauthorized: false },
+        host: new URL(connectionURL).hostname,
       })
     : new Pool({
         host: process.env.DB_HOST,
