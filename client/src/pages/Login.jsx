@@ -21,6 +21,7 @@ export default function Login() {
   const [user, setUser] = useState("");
   const [pwd, setPwd] = useState("");
   const [errMsg, setErrMsg] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const isFilled = user && pwd;
 
@@ -33,6 +34,7 @@ export default function Login() {
   }, [user, pwd]);
 
   async function handleSubmit(e) {
+    setIsLoading(true);
     e.preventDefault();
 
     try {
@@ -50,6 +52,7 @@ export default function Login() {
       const accessToken = response.data.token;
       setAuth({ user, pwd, accessToken });
       navigate(from, { replace: true });
+      setIsLoading(false);
     } catch (err) {
       if (!err?.response) {
         setErrMsg("No server response.");
@@ -63,6 +66,7 @@ export default function Login() {
       errRef.current.focus();
 
       console.error(err);
+      setIsLoading(false);
     }
   }
 
@@ -114,12 +118,14 @@ export default function Login() {
                   />
                 </div>
                 <button
-                  disabled={!isFilled}
-                  className={
-                    isFilled
-                      ? "bg-neutral-800 rounded-sm py-2 text-neutral-50 hover:bg-neutral-600 cursor-pointer"
-                      : "bg-neutral-200 rounded-sm py-2 text-neutral-500 hover:cursor-not-allowed"
-                  }>
+                  disabled={!isFilled || isLoading}
+                  className={`rounded-sm py-2 ${
+                    isLoading
+                      ? `animate-pulse bg-neutral-200 rounded-sm py-2 text-neutral-500 hover:cursor-not-allowed hover:cursor-not-allowed`
+                      : isFilled
+                      ? `bg-neutral-800 rounded-sm py-2 text-neutral-50 hover:bg-neutral-600 cursor-pointer`
+                      : `bg-neutral-200 rounded-sm py-2 text-neutral-500 hover:cursor-not-allowed`
+                  }`}>
                   Sign in
                 </button>
               </form>

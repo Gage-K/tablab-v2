@@ -30,6 +30,7 @@ export default function Register() {
   const [matchFocus, setMatchFocus] = useState(false);
 
   const [errMsg, setErrMsg] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     userRef.current.focus();
@@ -54,6 +55,7 @@ export default function Register() {
   }, [user, pwd, matchPwd]);
 
   async function handleSubmit(event) {
+    setIsLoading(true);
     event.preventDefault();
 
     // prevents enabling button by JS injection
@@ -63,6 +65,7 @@ export default function Register() {
       setErrMsg("Invalid entry");
       return;
     }
+
     try {
       const response = await axios.post(
         REGISTER_URL,
@@ -74,6 +77,7 @@ export default function Register() {
           },
         }
       );
+      setIsLoading(false);
       navigate(from, { replace: true });
     } catch (err) {
       if (!err?.response) {
@@ -84,6 +88,7 @@ export default function Register() {
         setErrMsg("Registration failed");
       }
       errRef.current.focus();
+      setIsLoading(false);
     }
   }
 
@@ -243,11 +248,13 @@ export default function Register() {
                 </div>
 
                 <button
-                  className={
-                    !validName || !validPwd || !validMatch
-                      ? "bg-neutral-200 rounded-sm py-2 text-neutral-500 hover:cursor-not-allowed"
-                      : "bg-neutral-800 rounded-sm py-2 text-neutral-50 hover:bg-neutral-600 cursor-pointer"
-                  }
+                  className={`rounded-sm py-2 ${
+                    isLoading
+                      ? `animate-pulse bg-neutral-200 rounded-sm py-2 text-neutral-500 hover:cursor-not-allowed hover:cursor-not-allowed`
+                      : !validName || !validPwd || !validMatch
+                      ? "bg-neutral-200 text-neutral-500 hover:cursor-not-allowed"
+                      : "bg-neutral-800 text-neutral-50 hover:bg-neutral-600 cursor-pointer"
+                  }`}
                   disabled={
                     !validName || !validPwd || !validMatch ? true : false
                   }>
