@@ -112,7 +112,11 @@ export default function Profile() {
                     <p className=" font-medium">Username</p>
                     <p>{user?.username}</p>
                   </div>
-                  <button onClick={handleLogout}>Log out</button>
+                  <button
+                    className="rounded-sm px-4 py-2 my-4 bg-neutral-800 text-neutral-50 hover:bg-neutral-600 cursor-pointer"
+                    onClick={handleLogout}>
+                    Log out
+                  </button>
                 </div>
 
                 <div>
