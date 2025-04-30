@@ -1,9 +1,10 @@
-export function SkeletonLine({ size }) {
-  const elementSize = `max-w-lg h-${size} my-4 bg-neutral-300 dark:bg-neutral-700 animate-pulse rounded-sm`;
-  return <div className={elementSize}></div>;
+export function SkeletonLine() {
+  return (
+    <div className="max-w-lg h-16 my-8 bg-neutral-300 dark:bg-neutral-700 animate-pulse rounded-sm"></div>
+  );
 }
 
-export function SkeletonText({ size }) {
+export function SkeletonText() {
   const elements = Array.from({ length: Math.floor(Math.random() * 3) + 3 });
 
   return (
@@ -11,7 +12,7 @@ export function SkeletonText({ size }) {
       {elements.map((element, index) => (
         <div
           key={index}
-          className={`max-w-full h-${size} my-4 bg-neutral-300 dark:bg-neutral-700  rounded-sm`}></div>
+          className={`max-w-full h-8 my-4 bg-neutral-300 dark:bg-neutral-700  rounded-sm`}></div>
       ))}
     </div>
   );

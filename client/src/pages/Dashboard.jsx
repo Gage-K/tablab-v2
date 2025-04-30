@@ -155,8 +155,8 @@ export default function Dashboard() {
           </div>
           {isLoading ? (
             <>
-              <SkeletonLine size="8" />
-              <SkeletonText size="6" />
+              <SkeletonText />
+              <SkeletonText />
             </>
           ) : allTabs.length === 0 ? (
             <div className="my-10 p-4 bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-sm grid place-items-center gap-y-2">
