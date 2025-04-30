@@ -7,6 +7,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import PageWrapper from "../layouts/PageWrapper";
 import useAuth from "../hooks/useAuth";
+import { SkeletonLine, SkeletonText } from "../components/Skeleton";
 
 const TABS_URL = "/api/tabs";
 const DEFAULT_TAB = {
@@ -57,8 +58,14 @@ export default function Dashboard() {
   const navigate = useNavigate();
 
   const [allTabs, setAllTabs] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDeletingId, setIsDeletingId] = useState(null);
+  const [isCreating, setIsCreating] = useState(false);
+
+  console.log(allTabs);
 
   async function getTabs() {
+    setIsLoading(true);
     try {
       const response = await axios.get(TABS_URL, {
         headers: {
@@ -67,8 +74,10 @@ export default function Dashboard() {
         },
       });
       setAllTabs(response.data);
+      setIsLoading(false);
     } catch (err) {
       console.error(err);
+      setIsLoading(false);
     }
   }
 
@@ -85,6 +94,8 @@ export default function Dashboard() {
   }, []);
 
   async function createTab() {
+    setIsCreating(true);
+
     try {
       const response = await axios.post(TABS_URL, JSON.stringify(DEFAULT_TAB), {
         headers: {
@@ -95,14 +106,18 @@ export default function Dashboard() {
       });
       if (response.status === 200) {
         const tabId = response.data.tabId;
+        setIsCreating(false);
         navigate(`/editor/${tabId}`, { tabId: tabId });
       }
     } catch (err) {
       console.error(err);
+      setIsCreating(false);
     }
   }
 
   async function deleteTab(id) {
+    setIsDeletingId(id);
+
     try {
       const URL = TABS_URL + "/" + id;
       const response = await axios.delete(URL, {
@@ -113,8 +128,10 @@ export default function Dashboard() {
         withCredentials: true,
       });
       getTabs();
+      setIsDeletingId(null);
     } catch (err) {
       console.error(err);
+      setIsDeletingId(null);
     }
   }
 
@@ -129,12 +146,21 @@ export default function Dashboard() {
             </h1>
             <button
               onClick={createTab}
-              className="text-xs py-4 h-fit px-3 rounded-md bg-neutral-800 text-neutral-50 hover:bg-neutral-400 hover:shadow-lg duration-150 ease-in-out hover:cursor-pointer">
+              disabled={isCreating}
+              className={`${
+                isCreating
+                  ? "animate-pulse bg-indigo-400 hover:cursor-not-allowed"
+                  : "bg-indigo-600 hover:bg-indigo-400 hover:shadow-lg duration-150 ease-in-out hover:cursor-pointer"
+              } text-xs py-4 h-fit px-3 rounded-md text-neutral-50 font-semibold`}>
               Create New Tab
             </button>
           </div>
-
-          {allTabs.length === 0 ? (
+          {isLoading ? (
+            <>
+              <SkeletonLine size="8" />
+              <SkeletonText size="6" />
+            </>
+          ) : allTabs.length === 0 ? (
             <div className="my-10 p-4 bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-sm grid place-items-center gap-y-2">
               <h2 className="text-md dark:text-neutral-200">No current tabs</h2>
             </div>
@@ -167,9 +193,10 @@ export default function Dashboard() {
                           Edit
                         </Link>
                         <button
+                          disabled={isDeletingId === tab.id}
                           onClick={() => deleteTab(tab.id)}
-                          className={`${buttonStyle} text-neutral-500 dark:text-neutral-400 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-500 dark:hover:text-red-50 hover:border-red-500 hover:cursor-pointer`}>
-                          Delete
+                          className={`${buttonStyle} text-neutral-500 dark:text-neutral-400 hover:bg-red-500 not-disabled:hover:text-red-50 hover:cursor-pointer disabled:bg-neutral-300 disabled:animate-pulse disabled:hover:cursor-not-allowed`}>
+                          {isDeletingId === tab.id ? "Deleting" : "Delete"}
                         </button>
                       </td>
                     </tr>
