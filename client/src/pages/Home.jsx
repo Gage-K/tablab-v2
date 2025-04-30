@@ -92,7 +92,7 @@ export default function Home() {
         </div>
 
         <PageWrapper>
-          <h2 className={h2Style}>Who is talab for?</h2>
+          <h2 className={h2Style}>Who is tablab for?</h2>
           <ul className="list-disc list-outside pl-4 dark:text-neutral-200">
             <li>Guitarists who compose original music</li>
             <li>
