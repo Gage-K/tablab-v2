@@ -135,8 +135,8 @@ export default function Dashboard() {
           </div>
 
           {allTabs.length === 0 ? (
-            <div className="my-10 p-4 bg-neutral-100 border border-neutral-200 rounded-sm grid place-items-center gap-y-2">
-              <h2 className="text-md">No current tabs</h2>
+            <div className="my-10 p-4 bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 rounded-sm grid place-items-center gap-y-2">
+              <h2 className="text-md dark:text-neutral-200">No current tabs</h2>
             </div>
           ) : (
             <div className="border border-neutral-300 dark:border-neutral-800 rounded my-10">
