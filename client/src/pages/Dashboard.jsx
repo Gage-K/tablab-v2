@@ -62,8 +62,6 @@ export default function Dashboard() {
   const [isDeletingId, setIsDeletingId] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
 
-  console.log(allTabs);
-
   async function getTabs() {
     setIsLoading(true);
     try {

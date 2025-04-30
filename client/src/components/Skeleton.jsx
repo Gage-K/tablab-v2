@@ -5,7 +5,7 @@ export function SkeletonLine({ size }) {
 
 export function SkeletonText({ size }) {
   const elements = Array.from({ length: Math.floor(Math.random() * 3) + 3 });
-  console.log(elements);
+
   return (
     <div className="animate-pulse">
       {elements.map((element, index) => (
