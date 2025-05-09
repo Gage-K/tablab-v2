@@ -30,6 +30,7 @@ export default function MainTabEditor() {
   const [position, setPosition] = useState({ measure: 0, frame: 0 });
   const [editorIsOpen, setEditorIsOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   function updateDetails(name, value) {
     setDetails((prevTab) => ({ ...prevTab, [name]: value }));
@@ -77,6 +78,8 @@ export default function MainTabEditor() {
   // FUNCTIONS
 
   async function saveChanges() {
+    setIsSaving(true);
+    console.log(isSaving);
     const data = {
       tabId: details.id,
       tabName: details.song,
@@ -94,8 +97,10 @@ export default function MainTabEditor() {
         },
         withCredentials: true,
       });
+      setIsSaving(false);
     } catch (err) {
       console.error(err);
+      setIsSaving(false);
     }
 
     setIsEditing(false);
@@ -223,9 +228,12 @@ export default function MainTabEditor() {
 
     setTab(updatedTab);
 
-    updatePosition(measure, frame + 1);
-
     setIsEditing(true);
+  }
+
+  function testHandler(measure, frame, isEmptyTab) {
+    addNewFrame(measure, frame, isEmptyTab);
+    updatePosition(measure, frame + 1);
   }
 
   function deleteMeasure(measure) {
@@ -307,7 +315,7 @@ export default function MainTabEditor() {
                     tab={tab}
                     position={position}
                     editorIsOpen={editorIsOpen}
-                    addNewFrame={addNewFrame}
+                    addNewFrame={testHandler}
                     addNewMeasure={addNewMeasure}
                     deleteFrame={deleteFrame}
                     deleteMeasure={deleteMeasure}
@@ -317,6 +325,7 @@ export default function MainTabEditor() {
                     updateTabData={updateTabData}
                     isEditing={isEditing}
                     saveChanges={saveChanges}
+                    isSaving={isSaving}
                   />
                 }
 
@@ -324,7 +333,7 @@ export default function MainTabEditor() {
                   tab={tab}
                   position={position}
                   updatePosition={updatePosition}
-                  addNewFrame={addNewFrame}
+                  addNewFrame={testHandler}
                   addNewMeasure={addNewMeasure}
                   tuning={details.tuning}
                 />

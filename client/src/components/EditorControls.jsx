@@ -23,6 +23,7 @@ export default function EditorControls({
   insertMeasure,
   isEditing,
   saveChanges,
+  isSaving,
 }) {
   const baseButton =
     "border border-none p-2 font-medium rounded grid place-items-center duration-150 ease-in-out";
@@ -73,9 +74,9 @@ export default function EditorControls({
       </div>
       <div>
         <button
-          className={saveButtonStyle}
+          className={`${saveButtonStyle} ${isSaving && `animate-pulse`} `}
           onClick={saveChanges}
-          disabled={!isEditing}>
+          disabled={!isEditing || isSaving}>
           {isEditing ? (
             <>
               <FloppyDisk size={iconSize} />{" "}
