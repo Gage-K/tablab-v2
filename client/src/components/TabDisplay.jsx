@@ -73,6 +73,9 @@ export default function TabDisplay({
               )}
               <button
                 key={nanoid()}
+                aria-label={`Measure ${tabChunk.measureIndex + 1} Frame ${
+                  tabChunk.frameIndex + 1
+                }`}
                 className={
                   position.measure === tabChunk.measureIndex &&
                   position.frame === tabChunk.frameIndex

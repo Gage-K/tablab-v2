@@ -74,7 +74,7 @@ export default function TabForm({
             className="grid grid-cols-3 sm:flex sm:flex-col gap-2 w-full p-2 border-b sm:border-b-0 border-neutral-700"
             name={`String ${string}`}
             key={`String ${string}`}>
-            <legend className="hidden">{`String ${string}`}</legend>
+            <legend className="sr-only">{`String ${string}`}</legend>
             <label
               htmlFor={`String ${string}`}
               className="font-medium text-neutral-50">
@@ -82,7 +82,7 @@ export default function TabForm({
             </label>
             <label className="tf-fretboard tf-component">
               <span className={string > 1 ? "visually-hidden" : ""}>
-                <span className="hidden">Select a Fret</span>
+                <span className="sr-only">Select a Fret</span>
               </span>
               <select
                 className="bg-neutral-700 p-1 rounded w-full"
@@ -90,15 +90,15 @@ export default function TabForm({
                 onChange={(Event) => updateFret(Event, string)}>
                 {FRETS.map((fret) => (
                   <option key={fret} value={fret}>
-                    {fret === -2 ? "" : fret === -1 ? "X" : fret}
+                    {fret === -2 ? " " : fret === -1 ? "X" : fret}
                   </option>
                 ))}
               </select>
             </label>
 
             <label className="tf-style tf-component">
-              <span className={string > 1 ? "hidden" : ""}>
-                <span className="hidden">Select a Style</span>
+              <span className={string > 1 ? "sr-only" : ""}>
+                <span className="sr-only">Select a Style</span>
               </span>
               <select
                 disabled={formData[string - 1].fret < 0}
