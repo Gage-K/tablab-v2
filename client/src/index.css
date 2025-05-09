@@ -39,8 +39,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative; /* make the container a positioned ancestor */
-  width: 100%; /* still recommended */
+  position: relative;
+  width: 100%;
 }
 
 .td-grid-note::before {
@@ -51,7 +51,7 @@ body {
   left: -2;
   width: calc(100% + 2px);
   z-index: -999;
-  position: absolute; /* change from relative */
+  position: absolute;
   border-top: 1px solid oklch(0.87 0 0);
 }
 
