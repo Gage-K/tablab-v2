@@ -23,6 +23,7 @@ todos.md
 *.njsproj
 *.sln
 *.sw?
+dist/
 
 # Secrets
 .env
