@@ -2,8 +2,6 @@ export interface User {
   id: string;
   username: string;
   email: string;
-  created_at: Date;
-  last_login: Date;
 }
 
 export interface UserWithPassword extends User {
@@ -13,7 +11,6 @@ export interface UserWithPassword extends User {
 export type CreateUserDto = {
   username: string;
   email?: string;
-  password: string;
 };
 
 export type UpdateUserDto = {

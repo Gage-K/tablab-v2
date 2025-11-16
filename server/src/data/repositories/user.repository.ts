@@ -49,6 +49,18 @@ export class UserRepository {
     }
   }
 
+  async getPassword(userId: string): Promise<string | null> {
+    try {
+      const query = "SELECT password FROM passwords WHERE user_id = $1";
+      const { rows } = await this.pool.query<{ password: string }>(query, [
+        userId,
+      ]);
+      return rows[0]?.password ?? null;
+    } catch (error) {
+      throw new InternalServerError("Failed to fetch user password");
+    }
+  }
+
   async create(userData: CreateUserDto, hashedPassword: string): Promise<User> {
     const client = await this.pool.connect();
     try {

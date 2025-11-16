@@ -28,9 +28,21 @@ export class ForbiddenError extends AppError {
   }
 }
 
+export class InvalidTokenError extends UnauthorizedError {
+  constructor(message: string = "Invalid token.") {
+    super(message);
+  }
+}
+
 export class NotFoundError extends AppError {
   constructor(resource: string) {
     super(404, `${resource} not found`);
+  }
+}
+
+export class ConflictError extends AppError {
+  constructor(message: string) {
+    super(409, message);
   }
 }
 
