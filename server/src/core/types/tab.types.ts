@@ -1,26 +1,19 @@
-export interface Tab {
-  id: string;
-  user_id: string;
-  tab_name: string;
-  tab_artist: string;
-  tuning: TabTuning;
-  created_at: Date;
-  modified_at: Date;
-  tab: string;
-}
+// Re-export shared types for convenience
+export {
+  TabEntity,
+  TabType,
+  TabResponse,
+  CreateTabDto,
+  UpdateTabDto,
+  TuningType,
+  TabBodyType,
+  TabDetailsType,
+  NoteFretType,
+  NoteStyleType,
+  FrameType,
+  MeasureType,
+} from "@tablab/shared";
 
-export type TabTuning = string[];
-
-export type CreateTabDto = {
-  tab_name: string;
-  tab_artist: string;
-  tuning: TabTuning;
-  tab: string;
-};
-
-export type UpdateTabDto = {
-  tab_name?: string;
-  tab_artist?: string;
-  tuning?: TabTuning;
-  tab?: string;
-};
+// Legacy alias for migration compatibility (remove after full migration)
+export type Tab = import("@tablab/shared").TabEntity;
+export type TabTuning = import("@tablab/shared").TuningType;

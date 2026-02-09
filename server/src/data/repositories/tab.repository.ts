@@ -1,56 +1,56 @@
-import { Tab, CreateTabDto, UpdateTabDto } from "../../core/types/tab.types";
+import { TabEntity, CreateTabDto, UpdateTabDto } from "../../core/types/tab.types";
 import { Pool } from "pg";
 import { InternalServerError } from "../../common/errors/AppError";
 
 export class TabRepository {
   constructor(private pool: Pool) {}
 
-  async findAll(): Promise<Tab[]> {
+  async findAll(): Promise<TabEntity[]> {
     try {
       const query = "SELECT * FROM tabs";
-      const { rows } = await this.pool.query<Tab>(query);
+      const { rows } = await this.pool.query<TabEntity>(query);
       return rows;
     } catch (error) {
       throw new InternalServerError("Failed to fetch tabs");
     }
   }
 
-  async findById(id: string): Promise<Tab | null> {
+  async findById(id: string): Promise<TabEntity | null> {
     try {
       const query = "SELECT * FROM tabs WHERE id = $1";
-      const { rows } = await this.pool.query<Tab>(query, [id]);
+      const { rows } = await this.pool.query<TabEntity>(query, [id]);
       return rows[0] ?? null;
     } catch (error) {
       throw new InternalServerError("Failed to fetch tab by id");
     }
   }
 
-  async findByUserId(userId: string): Promise<Tab[]> {
+  async findByUserId(userId: string): Promise<TabEntity[]> {
     try {
       const query = "SELECT * FROM tabs WHERE user_id = $1";
-      const { rows } = await this.pool.query<Tab>(query, [userId]);
+      const { rows } = await this.pool.query<TabEntity>(query, [userId]);
       return rows;
     } catch (error) {
       throw new InternalServerError("Failed to fetch tabs by user id");
     }
   }
 
-  async create(userId: string, tabData: CreateTabDto): Promise<Tab> {
+  async create(userId: string, tabData: CreateTabDto): Promise<TabEntity> {
     try {
       const now = new Date();
       const query = `
-        INSERT INTO tabs (user_id, tab_name, tab_artist, tuning, created_at, modified_at, tab)
+        INSERT INTO tabs (user_id, tab_name, tab_artist, tuning, created_at, modified_at, tab_data)
         VALUES ($1, $2, $3, $4, $5, $6, $7)
         RETURNING *
       `;
-      const { rows } = await this.pool.query<Tab>(query, [
+      const { rows } = await this.pool.query<TabEntity>(query, [
         userId,
         tabData.tab_name,
         tabData.tab_artist,
         JSON.stringify(tabData.tuning),
         now,
         now,
-        tabData.tab,
+        JSON.stringify(tabData.tab_data),
       ]);
       return rows[0];
     } catch (error) {
@@ -59,7 +59,7 @@ export class TabRepository {
     }
   }
 
-  async update(id: string, tabData: UpdateTabDto): Promise<Tab | null> {
+  async update(id: string, tabData: UpdateTabDto): Promise<TabEntity | null> {
     try {
       const updateFields: string[] = [];
       const values: any[] = [];
@@ -83,9 +83,9 @@ export class TabRepository {
         paramIndex++;
       }
 
-      if (tabData.tab !== undefined) {
-        updateFields.push(`tab = $${paramIndex}`);
-        values.push(tabData.tab);
+      if (tabData.tab_data !== undefined) {
+        updateFields.push(`tab_data = $${paramIndex}`);
+        values.push(JSON.stringify(tabData.tab_data));
         paramIndex++;
       }
 
@@ -106,7 +106,7 @@ export class TabRepository {
         RETURNING *
       `;
 
-      const result = await this.pool.query<Tab>(query, values);
+      const result = await this.pool.query<TabEntity>(query, values);
 
       return result.rows[0] ?? null;
     } catch (error) {

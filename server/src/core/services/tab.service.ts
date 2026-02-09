@@ -1,11 +1,12 @@
 import { TabRepository } from "../../data/repositories/tab.repository";
 import { ForbiddenError, NotFoundError } from "../../common/errors/AppError";
-import { CreateTabDto, Tab, UpdateTabDto } from "../types/tab.types";
+import { CreateTabDto, TabResponse, UpdateTabDto } from "../types/tab.types";
+import { tabEntityToResponse, tabEntitiesToResponses } from "@tablab/shared";
 
 export class TabService {
   constructor(private tabRepo: TabRepository) {}
 
-  async getTab(tabId: string, userId: string): Promise<Tab | null> {
+  async getTab(tabId: string, userId: string): Promise<TabResponse> {
     const tab = await this.tabRepo.findById(tabId);
     if (!tab) {
       throw new NotFoundError("Tab");
@@ -13,30 +14,32 @@ export class TabService {
 
     await this.verifyOwnership(tabId, userId);
 
-    return tab;
+    return tabEntityToResponse(tab);
   }
 
-  async getUserTabs(userId: string): Promise<Tab[]> {
-    return this.tabRepo.findByUserId(userId);
+  async getUserTabs(userId: string): Promise<TabResponse[]> {
+    const tabs = await this.tabRepo.findByUserId(userId);
+    return tabEntitiesToResponses(tabs);
   }
 
-  async createTab(tabData: CreateTabDto, userId: string): Promise<Tab> {
-    return this.tabRepo.create(userId, tabData);
+  async createTab(tabData: CreateTabDto, userId: string): Promise<TabResponse> {
+    const created = await this.tabRepo.create(userId, tabData);
+    return tabEntityToResponse(created);
   }
 
   async updateTab(
     tabId: string,
     tabData: UpdateTabDto,
     userId: string
-  ): Promise<Tab | null> {
+  ): Promise<TabResponse> {
     await this.verifyOwnership(tabId, userId);
 
     const updatedTab = await this.tabRepo.update(tabId, tabData);
     if (!updatedTab) {
-      throw new NotFoundError("Tab not found.");
+      throw new NotFoundError("Tab");
     }
 
-    return updatedTab;
+    return tabEntityToResponse(updatedTab);
   }
 
   async deleteTab(tabId: string, userId: string): Promise<boolean> {
