@@ -2,6 +2,14 @@ import { TabEntity, CreateTabDto, UpdateTabDto } from "../../core/types/tab.type
 import { Pool } from "pg";
 import { InternalServerError } from "../../common/errors/AppError";
 
+export interface PaginatedTabs {
+  tabs: TabEntity[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 export class TabRepository {
   constructor(private pool: Pool) {}
 
@@ -32,6 +40,38 @@ export class TabRepository {
       return rows;
     } catch (error) {
       throw new InternalServerError("Failed to fetch tabs by user id");
+    }
+  }
+
+  async findByUserIdPaginated(
+    userId: string,
+    page: number = 1,
+    limit: number = 20
+  ): Promise<PaginatedTabs> {
+    try {
+      const offset = (page - 1) * limit;
+
+      const countQuery = "SELECT COUNT(*) FROM tabs WHERE user_id = $1";
+      const countResult = await this.pool.query(countQuery, [userId]);
+      const total = parseInt(countResult.rows[0].count, 10);
+
+      const query = `
+        SELECT * FROM tabs
+        WHERE user_id = $1
+        ORDER BY modified_at DESC
+        LIMIT $2 OFFSET $3
+      `;
+      const { rows } = await this.pool.query<TabEntity>(query, [userId, limit, offset]);
+
+      return {
+        tabs: rows,
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      };
+    } catch (error) {
+      throw new InternalServerError("Failed to fetch paginated tabs");
     }
   }
 

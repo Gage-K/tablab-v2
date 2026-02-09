@@ -22,6 +22,21 @@ export class TabService {
     return tabEntitiesToResponses(tabs);
   }
 
+  async getUserTabsPaginated(
+    userId: string,
+    page: number = 1,
+    limit: number = 20
+  ) {
+    const result = await this.tabRepo.findByUserIdPaginated(userId, page, limit);
+    return {
+      tabs: tabEntitiesToResponses(result.tabs),
+      total: result.total,
+      page: result.page,
+      limit: result.limit,
+      totalPages: result.totalPages,
+    };
+  }
+
   async createTab(tabData: CreateTabDto, userId: string): Promise<TabResponse> {
     const created = await this.tabRepo.create(userId, tabData);
     return tabEntityToResponse(created);

@@ -1,19 +1,11 @@
 import { Router } from "express";
 import { AuthService } from "../../core/services/auth.service";
-import { body, validationResult } from "express-validator";
-import { ValidationError } from "../../common/errors/AppError";
+import { body } from "express-validator";
 import { Request, Response, NextFunction } from "express";
+import { validateRequest } from "../middleware/validation.middleware";
 
 export const createAuthRouter = (authService: AuthService) => {
   const router = Router();
-
-  const validate = (req: any, res: any, next: any) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      throw new ValidationError(errors.array()[0].msg);
-    }
-    next();
-  };
 
   router.post(
     "/register",
@@ -22,7 +14,7 @@ export const createAuthRouter = (authService: AuthService) => {
       body("email").optional().isEmail(),
       body("password").isLength({ min: 8 }),
     ],
-    validate,
+    validateRequest(),
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         const { user, tokenPair } = await authService.register(
@@ -44,7 +36,7 @@ export const createAuthRouter = (authService: AuthService) => {
   router.post(
     "/login",
     [body("username").trim().notEmpty(), body("password").notEmpty()],
-    validate,
+    validateRequest(),
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         const { user, tokenPair } = await authService.login(
