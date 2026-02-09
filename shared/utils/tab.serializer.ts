@@ -15,7 +15,7 @@ export function tabEntityToResponse(entity: TabEntity): TabResponse {
     details: {
       song: entity.tab_name,
       artist: entity.tab_artist,
-      creator: entity.user_id, // TODO: Replace with actual creator name if you join users table
+      creator: entity.user_id,
       dateCreated: entity.created_at.toISOString(),
       dateModified: entity.modified_at.toISOString(),
       tuning: entity.tuning,
