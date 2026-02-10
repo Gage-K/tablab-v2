@@ -87,8 +87,14 @@ export default function Profile() {
   }
 
   async function handleLogout() {
-    setAuth({});
-    redirect("/");
+  try {
+    await axios.post('/api/auth/logout', {}, {
+      headers: { Authorization: auth.accessToken }
+    });
+    } finally {
+      setAuth({});
+      redirect("/");
+    }
   }
 
   return (
