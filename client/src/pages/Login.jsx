@@ -50,7 +50,7 @@ export default function Login() {
       );
 
       const accessToken = response.data.token;
-      setAuth({ user, pwd, accessToken });
+      setAuth({ user, accessToken, refreshToken: response.data.refreshToken});
       navigate(from, { replace: true });
       setIsLoading(false);
     } catch (err) {
