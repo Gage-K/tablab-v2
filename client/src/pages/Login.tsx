@@ -5,14 +5,12 @@ import { Fragment, useEffect, useState, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router";
 import { AxiosError } from "axios";
 import axios from "../api/axios";
-import useAuth from "../hooks/useAuth";
+import useTypedAuth from "../hooks/useTypedAuth";
 
 const LOGIN_URL = "/api/auth/login";
 
 export default function Login() {
-  const { setAuth } = useAuth() as {
-    setAuth: (auth: { user: string; accessToken: string; refreshToken: string }) => void;
-  };
+  const { setAuth } = useTypedAuth();
 
   const navigate = useNavigate();
   const location = useLocation();

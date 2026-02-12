@@ -1,64 +1,21 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
-import { nanoid } from "nanoid";
 import { AxiosError } from "axios";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import { tabService } from "../api/services/tabService";
+import { DEFAULT_TAB } from "../shared/types/consts";
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import PageWrapper from "../layouts/PageWrapper";
-import useAuth from "../hooks/useAuth";
 import { SkeletonText } from "../components/Skeleton";
 import { TabType } from "../shared/types/tab.types";
-
-const TABS_URL = "/api/tabs";
-const DEFAULT_TAB = {
-  tab_name: "Untitled",
-  tab_artist: "Untitled",
-  tuning: ["E", "B", "G", "D", "A", "E"],
-  tab_data: [
-    [
-      {
-        id: 1,
-        notes: [
-          {
-            fret: -2,
-            style: "none",
-          },
-          {
-            fret: -2,
-            style: "none",
-          },
-          {
-            fret: -2,
-            style: "none",
-          },
-          {
-            fret: -2,
-            style: "none",
-          },
-          {
-            fret: -2,
-            style: "none",
-          },
-          {
-            fret: -2,
-            style: "none",
-          },
-        ],
-      },
-    ],
-  ],
-};
 
 export default function Dashboard() {
   const detailStyle =
     "p-3 dark:text-neutral-200 border-t border-neutral-300 dark:border-neutral-800 truncate";
   const buttonStyle =
     "w-full max-w-16 py-2 flex justify-center text-xs flex-none border border-transparent  rounded font-semibold hover:shadow-sm duration-150 ease-in-out";
-  const { setAuth } = useAuth() as {
-    setAuth: (auth: { user: string; accessToken: string; refreshToken: string }) => void
-  };
   const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
 
@@ -70,7 +27,7 @@ export default function Dashboard() {
   async function getTabs() {
     setIsLoading(true);
     try {
-      const response = await axiosPrivate.get(TABS_URL);
+      const response = await tabService.getAll(axiosPrivate);
       setAllTabs(response.data.data);
       setIsLoading(false);
     } catch (err) {
@@ -95,7 +52,7 @@ export default function Dashboard() {
     setIsCreating(true);
 
     try {
-      const response = await axiosPrivate.post(TABS_URL, DEFAULT_TAB);
+      const response = await tabService.create(axiosPrivate, DEFAULT_TAB);
       if (response.status === 201) {
         const tabId = response.data.data.id;
         setIsCreating(false);
@@ -114,8 +71,7 @@ export default function Dashboard() {
     setIsDeletingId(id);
 
     try {
-      const URL = TABS_URL + "/" + id;
-      const response = await axiosPrivate.delete(URL);
+      await tabService.delete(axiosPrivate, id);
       getTabs();
       setIsDeletingId(null);
     } catch (err) {
@@ -168,11 +124,11 @@ export default function Dashboard() {
                 <tbody>
                   {allTabs.map((tab) => (
                     <tr
-                      key={nanoid()}
+                      key={tab.id}
                       className="grid grid-cols-4 text-neutral-700 font-normal">
                       <td className={detailStyle}>{tab.details.song}</td>
                       <td className={detailStyle}>{tab.details.artist}</td>
-                      <td className={detailStyle}>{tab.details.tuning.reverse()}</td>
+                      <td className={detailStyle}>{[...tab.details.tuning].reverse().join("")}</td>
                       <td className={`${detailStyle} flex flex-wrap gap-1`}>
                         <Link
                           to={`/editor/${tab.id}`}

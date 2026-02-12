@@ -1,10 +1,10 @@
 import { createContext, useState, useEffect } from "react";
-import { Outlet } from "react-router";
+import type { AuthState, AuthContextValue } from "../shared/types/auth.types";
 
-const AuthContext = createContext({});
+const AuthContext = createContext<AuthContextValue>({} as AuthContextValue);
 
-export const AuthProvider = ({ children }) => {
-  const [auth, setAuth] = useState(() => {
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const [auth, setAuth] = useState<AuthState>(() => {
     const stored = localStorage.getItem('auth')
     return stored ? JSON.parse(stored) : {}
   });

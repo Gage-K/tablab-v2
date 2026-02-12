@@ -6,16 +6,14 @@ import Footer from "../components/Footer";
 import { Link, useNavigate, useLocation } from "react-router";
 import axios from "../api/axios";
 import { AxiosError } from "axios";
-import useAuth from "../hooks/useAuth";
+import useTypedAuth from "../hooks/useTypedAuth";
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const REGISTER_URL = "/api/auth/register";
 
 export default function Register() {
-  const { setAuth } = useAuth() as {
-    setAuth: (auth: { user: string; accessToken: string; refreshToken: string }) => void;
-  };
+  const { setAuth } = useTypedAuth();
   const userRef = useRef<HTMLInputElement | null>(null);
   const errRef = useRef<HTMLParagraphElement | null>(null);
   const navigate = useNavigate();

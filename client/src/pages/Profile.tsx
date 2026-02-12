@@ -3,7 +3,7 @@ import Header from "../components/Header";
 import PageWrapper from "../layouts/PageWrapper";
 import Footer from "../components/Footer";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
-import useAuth from "../hooks/useAuth";
+import useTypedAuth from "../hooks/useTypedAuth";
 import { AxiosError } from "axios";
 import { redirect, useNavigate } from "react-router";
 import { SkeletonText } from "../components/Skeleton";
@@ -19,9 +19,7 @@ interface UserProfile {
 const USER_URL = "/api/user";
 
 export default function Profile() {
-  const { setAuth } = useAuth() as {
-    setAuth: (auth: { user?: string; accessToken?: string; refreshToken?: string }) => void;
-  };
+  const { setAuth } = useTypedAuth();
   const axiosPrivate = useAxiosPrivate();
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState<UserProfile | null>(null);
