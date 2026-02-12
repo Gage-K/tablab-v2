@@ -2,7 +2,7 @@ import { Fragment, useEffect, useState, useRef } from "react";
 import Header from "../components/Header";
 import PageWrapper from "../layouts/PageWrapper";
 import Footer from "../components/Footer";
-import axios from "../api/axios";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import useAuth from "../hooks/useAuth";
 import { Link, redirect, useNavigate } from "react-router";
 import { SkeletonText } from "../components/Skeleton";
@@ -12,6 +12,7 @@ const LOGOUT_URL = "/api/logout";
 
 export default function Profile() {
   const { auth, setAuth } = useAuth();
+  const axiosPrivate = useAxiosPrivate();
   const errRef = useRef();
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState({});
@@ -30,12 +31,7 @@ export default function Profile() {
 
     const getUser = async () => {
       try {
-        const response = await axios.get(USER_URL, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.accessToken}`,
-          },
-        });
+        const response = await axiosPrivate.get(USER_URL);
         setUser(response.data);
         setEmail(response.data.email);
         setIsLoading(false);
@@ -62,16 +58,9 @@ export default function Profile() {
     event.preventDefault();
 
     try {
-      const response = await axios.put(
+      const response = await axiosPrivate.put(
         USER_URL,
-        JSON.stringify({ email: email }),
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.accessToken}`,
-          },
-          withCredentials: true,
-        }
+        JSON.stringify({ email: email })
       );
     } catch (err) {
       if (!err?.response) {
@@ -88,9 +77,7 @@ export default function Profile() {
 
   async function handleLogout() {
   try {
-    await axios.post('/api/auth/logout', {}, {
-      headers: { Authorization: auth.accessToken }
-    });
+    await axiosPrivate.post('/api/auth/logout', {});
     } finally {
       setAuth({});
       redirect("/");

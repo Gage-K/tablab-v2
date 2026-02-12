@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 import { nanoid } from "nanoid";
-import axios from "../api/axios";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -56,6 +56,7 @@ export default function Dashboard() {
     "w-full max-w-16 py-2 flex justify-center text-xs flex-none border border-transparent  rounded font-semibold hover:shadow-sm duration-150 ease-in-out";
   const { auth } = useAuth();
   const navigate = useNavigate();
+  const axiosPrivate = useAxiosPrivate();
 
   const [allTabs, setAllTabs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -65,12 +66,7 @@ export default function Dashboard() {
   async function getTabs() {
     setIsLoading(true);
     try {
-      const response = await axios.get(TABS_URL, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${auth.accessToken}`,
-        },
-      });
+      const response = await axiosPrivate.get(TABS_URL);
       setAllTabs(response.data.data);
       setIsLoading(false);
     } catch (err) {
@@ -95,13 +91,7 @@ export default function Dashboard() {
     setIsCreating(true);
 
     try {
-      const response = await axios.post(TABS_URL, DEFAULT_TAB, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${auth.accessToken}`,
-        },
-        withCredentials: true,
-      });
+      const response = await axiosPrivate.post(TABS_URL, DEFAULT_TAB);
       if (response.status === 201) {
         const tabId = response.data.data.id;
         setIsCreating(false);
@@ -119,13 +109,7 @@ export default function Dashboard() {
 
     try {
       const URL = TABS_URL + "/" + id;
-      const response = await axios.delete(URL, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${auth.accessToken}`,
-        },
-        withCredentials: true,
-      });
+      const response = await axiosPrivate.delete(URL);
       getTabs();
       setIsDeletingId(null);
     } catch (err) {

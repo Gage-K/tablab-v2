@@ -12,7 +12,7 @@ import TabDisplay from "./TabDisplay";
 import Editor from "./Editor";
 import Header from "./Header";
 import useAuth from "../hooks/useAuth";
-import axios from "../api/axios";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import PageWrapper from "../layouts/PageWrapper";
 import { SkeletonLine, SkeletonText } from "./Skeleton";
 
@@ -22,6 +22,7 @@ const TAB_URL = "/api/tabs";
 export default function MainTabEditor() {
   const { tabId } = useParams();
   const { auth } = useAuth();
+  const axiosPrivate = useAxiosPrivate();
 
   // STATES
   const [tab, setTab] = useState([]);
@@ -46,12 +47,7 @@ export default function MainTabEditor() {
     const getTab = async () => {
       try {
         const URL = TAB_URL + "/" + tabId;
-        const response = await axios.get(URL, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.accessToken}`,
-          },
-        });
+        const response = await axiosPrivate.get(URL);
         console.table(response)
         const data = response.data.data;
         const details = {
@@ -90,13 +86,7 @@ export default function MainTabEditor() {
 
     try {
       const URL = TAB_URL + "/" + tabId;
-      const response = await axios.put(URL, data, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${auth.accessToken}`,
-        },
-        withCredentials: true,
-      });
+      const response = await axiosPrivate.put(URL, data);
       setIsSaving(false);
     } catch (err) {
       console.error(err);
