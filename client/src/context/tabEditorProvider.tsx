@@ -1,7 +1,18 @@
 import { createContext, useState, useEffect, useContext } from "react";
-import { nanoid } from "nanoid";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { tabService } from "../api/services/tabService";
+import {
+  createEmptyFrame,
+  isExistingPosition,
+  isOnlyFrame,
+  isOnlyMeasure,
+  insertMeasure,
+  insertFrame,
+  removeMeasure,
+  removeFrame,
+  updateFrameNotes,
+  resolvePositionAfterFrameDelete,
+} from "../utils/tabOperations";
 import type {
   EditorTabBodyType,
   EditorDetailsType,
@@ -87,7 +98,7 @@ export function TabEditorProvider({
     return () => {
       controller.abort();
     };
-  }, [tabId]);
+  }, [tabId, axiosPrivate]);
 
   async function saveChanges() {
     setIsSaving(true);
@@ -113,20 +124,8 @@ export function TabEditorProvider({
     setEditorIsOpen((prev) => !prev);
   }
 
-  function isExistingPosition(measure: number, frame: number) {
-    return tab[measure] != undefined ? tab[measure][frame] != undefined : false;
-  }
-
-  function isOnlyFrame(measure: number) {
-    return tab[measure].length === 1;
-  }
-
-  function isOnlyMeasure() {
-    return tab.length === 1;
-  }
-
   function updatePosition(measure: number, frame: number) {
-    if (isExistingPosition(measure, frame)) {
+    if (isExistingPosition(tab, measure, frame)) {
       setPosition({ measure, frame });
       return;
     }
@@ -151,72 +150,45 @@ export function TabEditorProvider({
     }
   }
 
-  function getEmptyFrame(): EditorFrameType {
-    return {
-      id: nanoid(),
-      notes: [
-        { fret: -2, style: "none" },
-        { fret: -2, style: "none" },
-        { fret: -2, style: "none" },
-        { fret: -2, style: "none" },
-        { fret: -2, style: "none" },
-        { fret: -2, style: "none" },
-      ],
-    };
-  }
-
-  function getTabByLocation(measure: number, frame: number) {
-    return tab[measure][frame];
-  }
-
   function addNewMeasure(measure: number) {
-    const newMeasure = [getEmptyFrame()];
-    const updatedTab =
-      measure === -1
-        ? [newMeasure, ...tab]
-        : [...tab.slice(0, measure), newMeasure, ...tab.slice(measure)];
-
-    setTab(updatedTab);
-    measure === -1 ? updatePosition(0, 0) : updatePosition(measure, 0);
+    const newTab = insertMeasure(tab, measure);
+    setTab(newTab);
+    setPosition({ measure: measure === -1 ? 0 : measure, frame: 0 });
     setIsEditing(true);
   }
 
   function addNewFrame(measure: number, frame: number, isEmpty: boolean) {
-    const newTab = isEmpty
-      ? getEmptyFrame()
-      : { ...getTabByLocation(measure, frame), id: nanoid() };
-
-    const updatedTab = tab.map((prevMeasure, i) =>
-      i === measure
-        ? [
-            ...prevMeasure.slice(0, frame + 1),
-            newTab,
-            ...prevMeasure.slice(frame + 1),
-          ]
-        : prevMeasure
-    );
-
-    setTab(updatedTab);
+    const newTab = insertFrame(tab, measure, frame, isEmpty);
+    setTab(newTab);
     setIsEditing(true);
   }
 
   function addFrameAndAdvance(measure: number, frame: number, isEmpty: boolean) {
-    addNewFrame(measure, frame, isEmpty);
-    updatePosition(measure, frame + 1);
+    const newTab = insertFrame(tab, measure, frame, isEmpty);
+    setTab(newTab);
+    if (isExistingPosition(newTab, measure, frame + 1)) {
+      setPosition({ measure, frame: frame + 1 });
+    }
+    setIsEditing(true);
   }
 
   function deleteMeasure(measure: number) {
-    if (isOnlyMeasure()) {
+    if (isOnlyMeasure(tab)) {
       return;
     }
-    setTab((prev) => prev.filter((_prevMeasure, index) => index != measure));
-    updatePosition(measure - 1, tab[measure - 1]?.length - 1);
+    const newTab = removeMeasure(tab, measure);
+    setTab(newTab);
+    const prevMeasure = measure - 1;
+    setPosition({
+      measure: prevMeasure,
+      frame: newTab[prevMeasure]?.length - 1 || 0,
+    });
     setIsEditing(true);
   }
 
   function deleteFrame(frame: number, measure: number) {
-    if (isOnlyFrame(measure)) {
-      if (isOnlyMeasure()) {
+    if (isOnlyFrame(tab, measure)) {
+      if (isOnlyMeasure(tab)) {
         return;
       } else {
         deleteMeasure(measure);
@@ -224,33 +196,14 @@ export function TabEditorProvider({
       }
     }
 
-    setTab((prev) =>
-      prev.map((prevMeasure, i) =>
-        i === measure
-          ? prevMeasure.filter((_prevFrame, j) => j != frame)
-          : prevMeasure
-      )
-    );
-
-    isExistingPosition(measure, frame + 1)
-      ? updatePosition(measure, frame)
-      : isExistingPosition(measure + 1, 0)
-      ? updatePosition(measure + 1, 0)
-      : updatePosition(measure, frame - 1);
-
+    const newTab = removeFrame(tab, measure, frame);
+    setTab(newTab);
+    setPosition(resolvePositionAfterFrameDelete(newTab, measure, frame));
     setIsEditing(true);
   }
 
   function updateTabData(measure: number, index: number, formData: NoteFretType[]) {
-    setTab(
-      tab.map((prevMeasure, measureIndex) =>
-        prevMeasure.map((frame, frameIndex) =>
-          frameIndex === index && measureIndex === measure
-            ? { id: nanoid(), notes: formData }
-            : frame
-        )
-      )
-    );
+    setTab(updateFrameNotes(tab, measure, index, formData));
     setIsEditing(true);
   }
 
@@ -268,7 +221,7 @@ export function TabEditorProvider({
         saveChanges,
         handleOpeningEditor,
         updatePosition,
-        getEmptyFrame,
+        getEmptyFrame: createEmptyFrame,
         addNewMeasure,
         addNewFrame,
         addFrameAndAdvance,
