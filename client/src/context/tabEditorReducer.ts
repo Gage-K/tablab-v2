@@ -1,5 +1,5 @@
 import type {
-  EditorTabBodyType,
+  TabBodyType,
   EditorDetailsType,
   NoteFretType,
   TuningType,
@@ -19,7 +19,7 @@ import {
 } from "../utils/tabOperations";
 
 export interface TabEditorState {
-  tab: EditorTabBodyType;
+  tab: TabBodyType;
   details: EditorDetailsType;
   position: TabPositionType;
   editorIsOpen: boolean;
@@ -37,7 +37,7 @@ export const initialTabEditorState: TabEditorState = {
 };
 
 export type TabEditorAction =
-  | { type: "SET_TAB_DATA"; payload: { tab: EditorTabBodyType; details: EditorDetailsType } }
+  | { type: "SET_TAB_DATA"; payload: { tab: TabBodyType; details: EditorDetailsType } }
   | { type: "UPDATE_DETAILS"; payload: { name: string; value: string | TuningType } }
   | { type: "UPDATE_TAB_FRAME"; payload: { measure: number; frame: number; formData: NoteFretType[] } }
   | { type: "ADD_MEASURE"; payload: { measure: number } }

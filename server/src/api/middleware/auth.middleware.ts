@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { UserRepository } from "../../data/repositories/user.repository";
 import {
+  AppError,
   InternalServerError,
   InvalidTokenError,
 } from "../../common/errors/AppError";
@@ -35,7 +36,11 @@ export const authMiddleware = (userRepo: UserRepository) => {
 
       next();
     } catch (error) {
-      next(error);
+      if (error instanceof AppError) {
+        next(error);
+      } else {
+        next(new InvalidTokenError());
+      }
     }
   };
 };

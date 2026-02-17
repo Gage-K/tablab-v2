@@ -40,23 +40,10 @@ export type NoteFretType = {
   style: NoteStyleType;
 };
 
-export type EditorFrameType = {
+export type FrameType = {
   id: string;
   notes: NoteFretType[];
 };
-
-export type EditorMeasureType = EditorFrameType[];
-
-export type EditorTabBodyType = EditorMeasureType[];
-
-export type FrameType = [
-  NoteFretType,
-  NoteFretType,
-  NoteFretType,
-  NoteFretType,
-  NoteFretType,
-  NoteFretType
-];
 
 export type MeasureType = FrameType[];
 

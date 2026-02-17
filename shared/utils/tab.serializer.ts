@@ -86,10 +86,10 @@ export function validateTabSize(
 
     for (let j = 0; j < measure.length; j++) {
       const frame = measure[j];
-      if (!Array.isArray(frame) || frame.length !== 6) {
+      if (!frame || typeof frame !== "object" || !Array.isArray(frame.notes) || frame.notes.length !== 6) {
         return {
           valid: false,
-          error: `Frame ${j} in measure ${i} must be an array of 6 notes`,
+          error: `Frame ${j} in measure ${i} must be an object with a notes array of 6 notes`,
         };
       }
     }

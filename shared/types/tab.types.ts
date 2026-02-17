@@ -42,14 +42,10 @@ export type NoteFretType = {
   style: NoteStyleType;
 };
 
-export type FrameType = [
-  NoteFretType,
-  NoteFretType,
-  NoteFretType,
-  NoteFretType,
-  NoteFretType,
-  NoteFretType
-];
+export type FrameType = {
+  id: string;
+  notes: NoteFretType[];
+};
 
 export type MeasureType = FrameType[];
 

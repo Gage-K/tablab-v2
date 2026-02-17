@@ -1,12 +1,12 @@
 import { nanoid } from "nanoid";
 import type {
-  EditorTabBodyType,
-  EditorFrameType,
+  TabBodyType,
+  FrameType,
   NoteFretType,
-} from "../shared/types/tab.types";
+} from "../shared/types/tab.types"
 import type { TabPositionType } from "../shared/types/utilities.types";
 
-export function createEmptyFrame(): EditorFrameType {
+export function createEmptyFrame(): FrameType {
   return {
     id: nanoid(),
     notes: [
@@ -21,25 +21,25 @@ export function createEmptyFrame(): EditorFrameType {
 }
 
 export function isExistingPosition(
-  tab: EditorTabBodyType,
+  tab: TabBodyType,
   measure: number,
   frame: number
 ): boolean {
   return tab[measure] != undefined ? tab[measure][frame] != undefined : false;
 }
 
-export function isOnlyFrame(tab: EditorTabBodyType, measure: number): boolean {
+export function isOnlyFrame(tab: TabBodyType, measure: number): boolean {
   return tab[measure].length === 1;
 }
 
-export function isOnlyMeasure(tab: EditorTabBodyType): boolean {
+export function isOnlyMeasure(tab: TabBodyType): boolean {
   return tab.length === 1;
 }
 
 export function insertMeasure(
-  tab: EditorTabBodyType,
+  tab: TabBodyType,
   measure: number
-): EditorTabBodyType {
+): TabBodyType {
   const newMeasure = [createEmptyFrame()];
   return measure === -1
     ? [newMeasure, ...tab]
@@ -47,11 +47,11 @@ export function insertMeasure(
 }
 
 export function insertFrame(
-  tab: EditorTabBodyType,
+  tab: TabBodyType,
   measure: number,
   frame: number,
   isEmpty: boolean
-): EditorTabBodyType {
+): TabBodyType {
   const newFrame = isEmpty
     ? createEmptyFrame()
     : { ...tab[measure][frame], id: nanoid() };
@@ -68,17 +68,17 @@ export function insertFrame(
 }
 
 export function removeMeasure(
-  tab: EditorTabBodyType,
+  tab: TabBodyType,
   measure: number
-): EditorTabBodyType {
+): TabBodyType {
   return tab.filter((_prevMeasure, index) => index !== measure);
 }
 
 export function removeFrame(
-  tab: EditorTabBodyType,
+  tab: TabBodyType,
   measure: number,
   frame: number
-): EditorTabBodyType {
+): TabBodyType {
   return tab.map((prevMeasure, i) =>
     i === measure
       ? prevMeasure.filter((_prevFrame, j) => j !== frame)
@@ -87,11 +87,11 @@ export function removeFrame(
 }
 
 export function updateFrameNotes(
-  tab: EditorTabBodyType,
+  tab: TabBodyType,
   measure: number,
   frame: number,
   formData: NoteFretType[]
-): EditorTabBodyType {
+): TabBodyType {
   return tab.map((prevMeasure, measureIndex) =>
     prevMeasure.map((prevFrame, frameIndex) =>
       frameIndex === frame && measureIndex === measure
@@ -102,7 +102,7 @@ export function updateFrameNotes(
 }
 
 export function resolvePositionAfterFrameDelete(
-  tab: EditorTabBodyType,
+  tab: TabBodyType,
   measure: number,
   frame: number
 ): TabPositionType {

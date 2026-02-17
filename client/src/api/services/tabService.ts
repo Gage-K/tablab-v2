@@ -1,19 +1,19 @@
 import type { AxiosInstance } from "axios";
 import { API_ENDPOINTS } from "../endpoints";
-import type { EditorTabBodyType, TuningType } from "../../shared/types/tab.types";
+import type { TabBodyType, TuningType } from "../../shared/types/tab.types";
 
 export interface CreateTabPayload {
   tab_name: string;
   tab_artist: string;
   tuning: string[];
-  tab_data: EditorTabBodyType;
+  tab_data: TabBodyType;
 }
 
 export interface SaveTabPayload {
   tab_name: string;
   tab_artist: string;
   tuning: TuningType;
-  tab_data: EditorTabBodyType;
+  tab_data: TabBodyType;
 }
 
 export const tabService = {

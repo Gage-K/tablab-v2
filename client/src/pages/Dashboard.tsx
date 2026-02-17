@@ -1,17 +1,12 @@
-import { Link } from "react-router";
 import { DEFAULT_TAB } from "../shared/types/consts";
 import { useTabs, useCreateTab, useDeleteTab } from "../hooks/useTabs";
+import type { TabType } from "../shared/types/tab.types";
+import type { CreateTabPayload } from "../api/services/tabService";
 
 import { SkeletonText } from "../components/Skeleton";
 import { Button } from "../components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
+import { DataTable } from "../components/ui/data-table"
+import { columns } from "../components/ui/columns"
 
 export default function Dashboard() {
   const { data: allTabs = [], isLoading } = useTabs();
@@ -19,7 +14,6 @@ export default function Dashboard() {
   const deleteTabMutation = useDeleteTab();
 
   const isCreating = createTabMutation.isPending;
-  const isDeletingId = deleteTabMutation.isPending ? deleteTabMutation.variables : null;
 
   function createTab() {
     createTabMutation.mutate(DEFAULT_TAB);
@@ -27,6 +21,16 @@ export default function Dashboard() {
 
   function deleteTab(id: string) {
     deleteTabMutation.mutate(id);
+  }
+
+  function duplicateTab(tab: TabType) {
+    const payload: CreateTabPayload = {
+      tab_name: `${tab.details.song} (Copy)`,
+      tab_artist: tab.details.artist,
+      tuning: [...tab.details.tuning],
+      tab_data: tab.body,
+    };
+    createTabMutation.mutate(payload);
   }
 
   return (
@@ -59,39 +63,7 @@ export default function Dashboard() {
           </span>
         </button>
       ) : (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Title</TableHead>
-              <TableHead>Artist</TableHead>
-              <TableHead>Tuning</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {allTabs.map((tab) => (
-              <TableRow key={tab.id}>
-                <TableCell>{tab.details.song}</TableCell>
-                <TableCell>{tab.details.artist}</TableCell>
-                <TableCell>{[...tab.details.tuning].reverse().join("")}</TableCell>
-                <TableCell className="flex gap-2">
-                  <Button asChild variant="secondary" size="sm">
-                    <Link to={`/editor/${tab.id}`} viewTransition>
-                      Edit
-                    </Link>
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    disabled={isDeletingId === tab.id}
-                    onClick={() => deleteTab(tab.id)}>
-                    {isDeletingId === tab.id ? "Deleting" : "Delete"}
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <DataTable columns={columns} data={allTabs} meta={{ deleteTab, duplicateTab }} />
       )}
     </div>
   );

@@ -2,9 +2,9 @@ import { createContext, useReducer, useEffect, useContext, useRef } from "react"
 import { createEmptyFrame } from "../utils/tabOperations";
 import { useTab, useUpdateTab } from "../hooks/useTabs";
 import type {
-  EditorTabBodyType,
+  TabBodyType,
   EditorDetailsType,
-  EditorFrameType,
+  FrameType,
   NoteFretType,
   TuningType,
 } from "../shared/types/tab.types";
@@ -12,7 +12,7 @@ import type { TabPositionType } from "../shared/types/utilities.types";
 import { tabEditorReducer, initialTabEditorState } from "./tabEditorReducer";
 
 interface TabEditorContextType {
-  tab: EditorTabBodyType;
+  tab: TabBodyType;
   details: EditorDetailsType;
   isLoading: boolean;
   position: TabPositionType;
@@ -23,7 +23,7 @@ interface TabEditorContextType {
   saveChanges: () => Promise<void>;
   handleOpeningEditor: () => void;
   updatePosition: (measure: number, frame: number) => void;
-  getEmptyFrame: () => EditorFrameType;
+  getEmptyFrame: () => FrameType;
   addNewMeasure: (measure: number) => void;
   addNewFrame: (measure: number, frame: number, isEmpty: boolean) => void;
   addFrameAndAdvance: (measure: number, frame: number, isEmpty: boolean) => void;
