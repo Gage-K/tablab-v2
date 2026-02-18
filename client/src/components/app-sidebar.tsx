@@ -8,6 +8,7 @@ import {
   User,
 } from "lucide-react"
 
+import { ModeToggle } from "./theme-switcher"
 import { useTabs, useCreateTab } from "../hooks/useTabs"
 import useTypedAuth from "../hooks/useTypedAuth"
 import { DEFAULT_TAB } from "../shared/types/consts"
@@ -134,6 +135,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
       <SidebarFooter>
         <SidebarMenu>
+          <SidebarMenuItem>
+            <ModeToggle />
+          </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton onClick={handleLogout}>
               <LogOut />
