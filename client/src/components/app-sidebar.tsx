@@ -1,12 +1,12 @@
 import { Link, useParams, useNavigate } from "react-router"
 import {
-  FileMusic,
-  LayoutDashboard,
-  LogOut,
-  Music,
+  MusicNote,
+  SquaresFour,
+  SignOut,
+  MusicNotes,
   Plus,
   User,
-} from "lucide-react"
+} from "@phosphor-icons/react"
 
 import { ModeToggle } from "./theme-switcher"
 import { useTabs, useCreateTab } from "../hooks/useTabs"
@@ -53,7 +53,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton size="lg" asChild>
               <Link to="/">
                 <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <Music className="size-4" />
+                  <MusicNotes className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">tablab</span>
@@ -73,7 +73,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <Link to="/dashboard">
-                    <LayoutDashboard />
+                    <SquaresFour />
                     <span>All tabs</span>
                   </Link>
                 </SidebarMenuButton>
@@ -103,7 +103,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 ))
               ) : (
                 <>
-                  {allTabs.map((tab) => (
+                  <SidebarMenuItem>
+                    <SidebarMenuButton
+                      onClick={handleCreateTab}
+                      disabled={createTabMutation.isPending} className="cursor-pointer"
+                    >
+                      <Plus />
+                      <span>{createTabMutation.isPending ? "Creating..." : "New Tab"}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+
+                  {allTabs.slice(0, 10).map((tab) => (
                     <SidebarMenuItem key={tab.id}>
                       <SidebarMenuButton
                         asChild
@@ -111,21 +121,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         tooltip={`${tab.details.song} - ${tab.details.artist}`}
                       >
                         <Link to={`/editor/${tab.id}`}>
-                          <FileMusic />
+                          <MusicNote />
                           <span>{tab.details.song || "Untitled"}</span>
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   ))}
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      onClick={handleCreateTab}
-                      disabled={createTabMutation.isPending}
-                    >
-                      <Plus />
-                      <span>{createTabMutation.isPending ? "Creating..." : "New Tab"}</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
                 </>
               )}
             </SidebarMenu>
@@ -140,7 +141,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton onClick={handleLogout}>
-              <LogOut />
+              <SignOut />
               <span>Log out{auth.user ? ` (${auth.user})` : ""}</span>
             </SidebarMenuButton>
           </SidebarMenuItem>

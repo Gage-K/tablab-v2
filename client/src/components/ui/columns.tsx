@@ -2,9 +2,8 @@ import { ColumnDef } from "@tanstack/react-table"
 import { TabType } from "../../shared/types/tab.types"
 import { Link } from "react-router"
 import { Button } from "./button"
-import { MoreHorizontal } from "lucide-react"
+import { DotsThree, ArrowUp, ArrowDown } from "@phosphor-icons/react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { ArrowUp, ArrowDown } from "lucide-react"
 
 function timeAgo(date: Date): string {
   const now = Date.now();
@@ -90,7 +89,7 @@ export const columns: ColumnDef<TabType>[] = [
             <DropdownMenuTrigger asChild>
               <Button variant="ghost">
                 <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
+                <DotsThree className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">

@@ -34,7 +34,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="grid gap-6">
+    <>
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Tabs</h1>
@@ -65,6 +65,6 @@ export default function Dashboard() {
       ) : (
         <DataTable columns={columns} data={allTabs} meta={{ deleteTab, duplicateTab }} />
       )}
-    </div>
+    </>
   );
 }

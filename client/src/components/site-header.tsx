@@ -1,4 +1,4 @@
-import { SidebarIcon } from "lucide-react"
+import { Sidebar } from "@phosphor-icons/react"
 import { Link, useLocation, useParams } from "react-router"
 
 import { useTab } from "../hooks/useTabs"
@@ -38,7 +38,7 @@ export function SiteHeader() {
           size="icon"
           onClick={toggleSidebar}
         >
-          <SidebarIcon />
+          <Sidebar />
         </Button>
         <Separator orientation="vertical" className="mr-2 h-4" />
         <Breadcrumb className="hidden sm:block">
