@@ -19,8 +19,8 @@ services:
 
   backend:
     build:
-      context: ./server
-      dockerfile: Dockerfile.prod
+      context: .
+      dockerfile: server/Dockerfile.prod
     restart: always
     environment:
       NODE_ENV: production
