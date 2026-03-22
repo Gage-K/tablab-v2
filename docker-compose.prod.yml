@@ -33,7 +33,7 @@ services:
       ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
       REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
       SESSION_SECRET: ${SESSION_SECRET}
-      FE_API: https://yourdomain.com
+      FE_API: https://bibliotab.com
     depends_on:
       postgres:
         condition: service_healthy
@@ -43,7 +43,7 @@ services:
       context: ./client
       dockerfile: Dockerfile.prod
       args:
-        VITE_BE_URL: https://yourdomain.com
+        VITE_BE_URL: https://bibliotab.com
     restart: always
     depends_on:
       - backend
