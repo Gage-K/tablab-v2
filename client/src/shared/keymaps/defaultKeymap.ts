@@ -30,7 +30,8 @@ export type EditorAction =
   | "addFrameBefore"
   | "addMeasureAfter"
   | "addMeasureBefore"
-  | "deleteFrame";
+  | "deleteFrame"
+  | "duplicateFrame";
 
 export type Keymap = Record<string, EditorAction>;
 
@@ -77,6 +78,7 @@ export const defaultKeymap: Keymap = {
   "}": "addMeasureAfter",
   "{": "addMeasureBefore",
   X: "deleteFrame",
+  d: "duplicateFrame",
 
   // Escape
   Escape: "escape",
