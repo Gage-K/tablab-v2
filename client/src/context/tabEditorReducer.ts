@@ -201,7 +201,7 @@ export function tabEditorReducer(state: TabEditorState, action: TabEditorAction)
       const currentFrame = state.tab[measure]?.[frame];
       if (!currentFrame) return state;
       const newNotes = currentFrame.notes.map((note, i) =>
-        i === stringIdx ? { ...note, fret } : note
+        i === stringIdx ? { ...note, fret, ...(fret === -2 || fret === -1 ? { style: "none" } : {}) } : note
       );
       return {
         ...state,

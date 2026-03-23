@@ -320,6 +320,9 @@ export function TabEditorProvider({
         case "addFrameAfter":
           dispatch({ type: "ADD_FRAME", payload: { measure: position.measure, frame: position.frame, isEmpty: true } });
           break;
+        case "duplicateFrame":
+          dispatch({ type: "ADD_FRAME_AND_ADVANCE", payload: { measure: position.measure, frame: position.frame, isEmpty: false } });
+          break;
         case "addMeasureBefore":
           dispatch({ type: "ADD_MEASURE", payload: { measure: position.measure } });
           dispatch({ type: "SET_POSITION", payload: { measure: position.measure + 1, frame: position.frame } });
