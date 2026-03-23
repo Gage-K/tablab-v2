@@ -291,15 +291,6 @@ export function TabEditorProvider({
               fret: FRET_EMPTY,
             },
           });
-          dispatch({
-            type: "SET_NOTE_STYLE",
-            payload: {
-              measure: position.measure,
-              frame: position.frame,
-              string: position.string,
-              style: "none",
-            },
-          });
           break;
         case "muteNote":
           dispatch({
