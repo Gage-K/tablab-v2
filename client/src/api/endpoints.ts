@@ -5,5 +5,8 @@ export const API_ENDPOINTS = {
   },
   user: {
     base: "/api/user",
+    email: "/api/user/email",
+    username: "/api/user/username",
+    password: "/api/user/password",
   },
 } as const;

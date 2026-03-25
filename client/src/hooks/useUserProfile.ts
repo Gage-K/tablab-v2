@@ -1,9 +1,9 @@
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useAxiosPrivate from "./useAxiosPrivate";
 import { queryKeys } from "../api/queryKeys";
 import { API_ENDPOINTS } from "../api/endpoints";
 
-interface UserProfile {
+export interface UserProfile {
   id: string;
   username: string;
   email: string;
@@ -25,12 +25,54 @@ export function useUserProfile() {
 
 export function useUpdateEmail() {
   const axiosPrivate = useAxiosPrivate();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (email: string) => {
       const response = await axiosPrivate.put(
-        API_ENDPOINTS.user.base,
+        API_ENDPOINTS.user.email,
         JSON.stringify({ email })
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.user.profile });
+    },
+  });
+}
+
+export function useUpdateUsername() {
+  const axiosPrivate = useAxiosPrivate();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (username: string) => {
+      const response = await axiosPrivate.put(
+        API_ENDPOINTS.user.username,
+        JSON.stringify({ username })
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.user.profile });
+    },
+  });
+}
+
+export function useUpdatePassword() {
+  const axiosPrivate = useAxiosPrivate();
+
+  return useMutation({
+    mutationFn: async ({
+      currentPassword,
+      newPassword,
+    }: {
+      currentPassword: string;
+      newPassword: string;
+    }) => {
+      const response = await axiosPrivate.put(
+        API_ENDPOINTS.user.password,
+        JSON.stringify({ currentPassword, newPassword })
       );
       return response.data;
     },
