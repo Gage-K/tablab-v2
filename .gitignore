@@ -28,6 +28,8 @@ dist/
 
 # Secrets
 .env
+.env.*
+!.env.example
 
 # Compiled JS files in shared directory (TypeScript source only)
 shared/**/*.js
